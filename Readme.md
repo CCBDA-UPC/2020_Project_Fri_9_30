@@ -148,3 +148,20 @@ The final notification sending method depends on the detailed realization of the
 Our options service that we may use in the lab based on our future plan. **Amazon Redshift** and **Amazon EMR** are regarded as data warehouses and stronger data science integrated services facing large amounts of data streams.  We also need the basic **Amazon Relational Database** to support our lab if necessary.
 
 ## Tasks Planning
+
+We created a rough timeline as a guide on what to do. We focus mainly on 3 parts:
+1. Create a simulation of the infection spread
+2. Implement a contact tracing system proposed by Google and Apple
+3. Visualize the result
+
+This is our task planning:
+
+<p align="center">
+<img src="/images/week12.png" alt="schedule1" width="300"/>
+</p>
+
+<p align="center">
+<img src="/images/week345.png" alt="schedule2" width="300"/>
+</p>
+
+The link to the document can be found [here](/https://docs.google.com/spreadsheets/d/1M8NSXkly85SM0MfXcCPo6ME6mt7woyb_O150D1Azrfw/edit#gid=0)
