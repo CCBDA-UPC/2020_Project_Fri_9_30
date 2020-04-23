@@ -127,7 +127,8 @@ Given the project is initiated by Google and Apple, we believe it is necessary t
 Using CloudFront can significantly improve the access delay caused by distribution, bandwidth, and server performance. It is especially suitable for our prototype as a live broadcasting service scenario. Global users can obtain the required content nearby without the network congestion, and the response speed and success rate of users visiting the website are also improved.
 
 To be more specific, we plan to deploy the architecture of Amazon CloudFront for dynamic websites (shown below). It is proposed to use EC2 and Global Server Load Balancer (GSBL) to be the source of the CloudFront (where we create an EC2 first, and add a GSLB layer on the top) [1](https://blog.csdn.net/keithyau/article/details/49509187). 
- ![Potential Architecture](https://www.google.com/url?sa=i&url=https%3A%2F%2Faws.amazon.com%2Fblogs%2Faws%2Famazon-cloudfront-support-for-dynamic-content%2F&psig=AOvVaw2tnZ0x2IxSESOXz0g7BrR2&ust=1587766136606000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLiE2_bH_-gCFQAAAAAdAAAAABAk)
+
+![Potential Architecture](https://media.amazonwebservices.com/blog/cloudfront_dynamic_web_sites_full_1.jpg)
  
 ### Amazon Simple Notification Service (SNS) 
 #### For prototype
@@ -139,7 +140,7 @@ One significant function of the prototype is to actively notify people when thei
     1. SNS + Google Firebase Cloud Messaging (FCM)
     2. SNS + Apple PushNotification Service (APNS)
 
-![Potential Structure](https://www.google.com/url?sa=i&url=https%3A%2F%2Fmedium.com%2F%40amisree%2Fauthor-arafath-misree-cc5da85888ef&psig=AOvVaw20HUGuZFc60CM9piFNRGmR&ust=1587756135340000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNj00Laj_-gCFQAAAAAdAAAAABAD)
+![Potential Structure](https://miro.medium.com/max/1400/0*2AuNeo8sKFGeuAzF.)
 
 The final notification sending method depends on the detailed realization of the prototype, and what information people are willing to provide. If phone numbers or email are able to be obtained, we can easily send SMS and emails, and also use them as our key to the database. Ideally, the partnership of Apple and Google should be able to access some of their platform endpoints, which enables us to connect SNS with these push notification services. [2]
 
