@@ -13,9 +13,14 @@
 - People: professions, daily agenda, transportation,...
 - Infection characteristics: transmission rate, duration of the incubation stage, mortality percentage,...
 
+![simulation](/images/simulation.png)
+
 2. Contact tracing based on the proposal from Apple and Google
 - To figure out who has been in contact with an infected person and 
 - To take some measures to prevent the virus transmitting
+
+![ContactTracing](/images/ContactTracing.png)
+
 
 ## Scopes
 
