@@ -15,18 +15,22 @@ Basically, people in a particular area are represented by dots with different co
 - People: professions, daily agenda, transportation,...
 - Infection characteristics: transmission rate, duration of the incubation stage, mortality percentage,...
 
-![simulation](/images/simulation.png)
+<p align="center">
+<img src="/images/simulation.png" alt="drawing" width="500"/>
+</p>
 
 **2. Simulation with Contact Tracing System based on the proposal from Apple and Google**
 
 We are going to implement a simplified Contact Tracing System to keep track of people who have been recently in contact with an infected person. We then take some measures, for example, self-quarantined and specify it in the simulation to see the changes in infection rate whether it goes down or not.
 
-![ContactTracing](/images/ContactTracing.png)
+<p align="center">
+<img src="/images/ContactTracing.png" alt="drawing" width="300"/>
+</p>
 
 
 ## Scopes
 
-This project aims at developing infection simulating and contact tracing services to evaluate and decide which measures should be taken to stop people from getting infected with coronavirus  
+This project aims at developing infection simulating and contact tracing services to evaluate and decide which measures should be taken to stop people from getting infected with coronavirus.  
 
 - Deliverables: Infection Simulating and contact tracing service
 - Customers & Stakeholders: Government, Citizens, ...
