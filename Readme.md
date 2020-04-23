@@ -30,3 +30,7 @@ This project aims at developing infection simulating and contact tracing service
 - Customers & Stakeholders: Government, Citizens, ...
 - Duration: 5 weeks
 - Development methods: Agile
+
+## Services and Resources
+
+## Tasks Planning
