@@ -1,4 +1,4 @@
-# Cloud Computing Project Challenge
+# Cloud Computing Project Challenge (*Draft Report*)
 
 ## Members:
 - ariston.harianto.lim@est.fib.upc.edu
