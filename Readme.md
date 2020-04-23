@@ -9,15 +9,17 @@
 
 ## Functionalities
 
-1. Simulate people's behavior and infection spread based on several factors:
+**1. Simulation of people's behavior and infection spread**
+
+Basically, people in a particular area are represented by dots with different colors which indicate their health status. The coordinates of these dots depend on the locations of people and how they are moving based on individual daily agenda. These following factors can be specified by users via parameters.
 - People: professions, daily agenda, transportation,...
 - Infection characteristics: transmission rate, duration of the incubation stage, mortality percentage,...
 
 ![simulation](/images/simulation.png)
 
-2. Contact tracing based on the proposal from Apple and Google
-- To figure out who has been in contact with an infected person and 
-- To take some measures to prevent the virus transmitting
+**2. Simulation with Contact Tracing System based on the proposal from Apple and Google**
+
+We are going to implement a simplified Contact Tracing System to keep track of people who have been recently in contact with an infected person. We then take some measures, for example, self-quarantined and specify it in the simulation to see the changes in infection rate whether it goes down or not.
 
 ![ContactTracing](/images/ContactTracing.png)
 
