@@ -156,12 +156,12 @@ We created a rough timeline as a guide on what to do. We focus mainly on 3 parts
 
 This is our task planning:
 
-<p align="center">
-<img src="/images/week12.png" alt="schedule1" width="300"/>
+<p align="left">
+<img src="/images/week12.png" alt="schedule1" width="500"/>
 </p>
 
-<p align="center">
-<img src="/images/week345.png" alt="schedule2" width="300"/>
+<p align="left">
+<img src="/images/week345.png" alt="schedule2" width="500"/>
 </p>
 
 The link to the document can be found [here](/https://docs.google.com/spreadsheets/d/1M8NSXkly85SM0MfXcCPo6ME6mt7woyb_O150D1Azrfw/edit#gid=0)
