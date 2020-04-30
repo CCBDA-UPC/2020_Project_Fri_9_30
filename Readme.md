@@ -7,7 +7,7 @@
 - yalei.li@est.fib.upc.edu
 - manh.hung.nguyen@est.fib.upc.edu
 
-**1. Data generation**
+## **1. Data generation**
 ### Explanation of dataset
 
 Randomy generate following data
@@ -35,9 +35,93 @@ Randomy generate following data
 4=Dead
 
 
-**2. Simple simulation**
+## **2. Simple simulation**
+With refer to the virus spread model from [paulvangentcom](https://github.com/paulvangentcom/python_corona_simulation), we will simulate the infection model based on our previous generated population data. The desired result will be shown as below:
+![simulation_anime](images/simulation.gif)
 
-**3. Visualization**
+To achieve this goal, several modules will be used, including [`infection.py`](https://github.com/paulvangentcom/python_corona_simulation/blob/master/infection.py), [`path_planning.py`](https://github.com/paulvangentcom/python_corona_simulation/blob/master/path_planning.py), and [`simulation.py`](https://github.com/paulvangentcom/python_corona_simulation/blob/master/simulation.py).
+Besides, we will develop the following parameters to better assist our simulation.
+
+### Parameter settings
+#### Population configuration
+
+Based on the generated data, we will distribute them within a coordinate system based on their geo locations. Together with pre-assigned attributes, we will also assign them with their daily schedules (based on their destinations). In order to reflect different case scenarios, different wandering range will be assigned (i.e. reduced motion area with strict regulations).
+
+Details are shown as below:
+```buildoutcfg
+ '''initialized the population for the simulation
+    the population matrix for this simulation has the following columns:
+    0 : unique ID
+    1 : current x coordinate
+    2 : current y coordinate
+    3 : current heading in x direction
+    4 : current heading in y direction
+    5 : current speed
+    6 : current state (0=healthy, 1=sick, 2=immune, 3=dead, 4=immune but infectious)
+    7 : age
+    8 : infected_since (frame the person got infected)
+    9 : recovery vector (used in determining when someone recovers or dies)
+    10 : in treatment
+    11 : active destination (0 = random wander, 1, .. = destination matrix index)
+    12 : at destination: whether arrived at destination (0=traveling, 1=arrived)
+    13 : wander_range_x : wander ranges on x axis for those who are confined to a location
+    14 : wander_range_y : wander ranges on y axis for those who are confined to a location
+```   
+
+To be specific, the daily schedule will be simplified by how many destinations the person visit that day.
+```buildoutcfg
+def initialize_destination_matrix(pop_size, total_destinations):
+    '''intializes the destination matrix
+    function that initializes the destination matrix used to
+    define individual location and roam zones for population members
+    Keyword arguments
+    -----------------
+    pop_size : int
+        the size of the population
+    total_destinations : int
+        the number of destinations to maintain in the matrix. Set to more than
+        one if for example people can go to work, supermarket, home, etc.
+    '''
+
+    destinations = np.zeros((pop_size, total_destinations * 2))
+
+    return destinations
+```
+
+#### Population mobility
+
+Individual mobility will be set by `go_to_location`, where arrived person will be `keep_at_dest`. 
+The whole population will be monitored based on the active destinations `check_at_dest`. It can assist later in defining the infected region if one person is confirmed infected in that cluster.
+
+```buildoutcfg
+def go_to_location
+
+def check_at_destination
+
+def keep_at_destination
+```
+
+#### Infection model
+
+Basically, if one person is confirmed infected, those who were in close contact (`near_by`) will be marked, and infected by infection_chance (`infect`).
+ 
+```buildoutcfg
+def find_nearby(population, infection_range)
+
+def infect(population, infection_range, infection_chance)
+```
+
+After being infected, the health state will be changed into `recover_or_die`. Recover will be updated after observation_period, and death rate will be age dependent, and treatment dependent.
+
+```buildoutcfg
+def recover_or_die(population):
+    '''
+    recovery_duration
+    morality_chance(default_morality, risk_age, treatment_factor)
+    '''
+```
+
+## **3. Visualization**
 
 We wanted a visualization to track the evolution of the infection (number of cases, number of deaths, etc) updated in 
 real-time whenever there is new data. To do this, we use the `animation` function of `matplotlib`. The code can be
