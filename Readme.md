@@ -34,6 +34,8 @@ Randomy generate following data
 3=Recovered 
 4=Dead
 
+![sampledata](images/sample%20data.png)
+
 
 ## **2. Simple simulation**
 With refer to the virus spread model from [paulvangentcom](https://github.com/paulvangentcom/python_corona_simulation), we will simulate the infection model based on our previous generated population data. The desired result will be shown as below:
