@@ -8,7 +8,7 @@
 - manh.hung.nguyen@est.fib.upc.edu
 
 **1. Data generation**
-### Explaination of dataset
+### Explanation of dataset
 
 Randomy generate following data
 
@@ -37,4 +37,13 @@ Randomy generate following data
 
 **2. Simple simulation**
 
-**3. Visuzlization**
+**3. Visualization**
+
+We wanted a visualization to track the evolution of the infection (number of cases, number of deaths, etc) updated in 
+real-time whenever there is new data. To do this, we use the `animation` function of `matplotlib`. The code can be
+found at `matplotlibAnimation.py`. 
+
+This is what it looks like.
+![animation](images/live%20update%20graph.gif)
+
+
