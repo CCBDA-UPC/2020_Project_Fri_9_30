@@ -48,7 +48,7 @@ Besides, we will develop the following parameters to better assist our simulatio
 Based on the generated data, we will distribute them within a coordinate system based on their geo locations. Together with pre-assigned attributes, we will also assign them with their daily schedules (based on their destinations). In order to reflect different case scenarios, different wandering range will be assigned (i.e. reduced motion area with strict regulations).
 
 Details are shown as below:
-```buildoutcfg
+```python
  '''initialized the population for the simulation
     the population matrix for this simulation has the following columns:
     0 : unique ID
@@ -69,7 +69,7 @@ Details are shown as below:
 ```   
 
 To be specific, the daily schedule will be simplified by how many destinations the person visit that day.
-```buildoutcfg
+```python
 def initialize_destination_matrix(pop_size, total_destinations):
     '''intializes the destination matrix
     function that initializes the destination matrix used to
@@ -93,7 +93,7 @@ def initialize_destination_matrix(pop_size, total_destinations):
 Individual mobility will be set by `go_to_location`, where arrived person will be `keep_at_dest`. 
 The whole population will be monitored based on the active destinations `check_at_dest`. It can assist later in defining the infected region if one person is confirmed infected in that cluster.
 
-```buildoutcfg
+```python
 def go_to_location
 
 def check_at_destination
@@ -101,11 +101,11 @@ def check_at_destination
 def keep_at_destination
 ```
 
-#### Infection model
+### Infection model
 
 Basically, if one person is confirmed infected, those who were in close contact (`near_by`) will be marked, and infected by infection_chance (`infect`).
  
-```buildoutcfg
+```python
 def find_nearby(population, infection_range)
 
 def infect(population, infection_range, infection_chance)
@@ -113,7 +113,7 @@ def infect(population, infection_range, infection_chance)
 
 After being infected, the health state will be changed into `recover_or_die`. Recover will be updated after observation_period, and death rate will be age dependent, and treatment dependent.
 
-```buildoutcfg
+```python
 def recover_or_die(population):
     '''
     recovery_duration
@@ -121,6 +121,39 @@ def recover_or_die(population):
     '''
 ```
 
+### Contact tracing model
+
+With further reference to [`johntmyers`](https://github.com/gretelai/contact-tracing-experiment) implementation of `Apple + Google Contact Tracing`, we plan to include the contact tracing function in the later stage to show whether this function can help flat the curve.
+
+Generally, we will assign each person with a `Hnadset ID` to track their locations for each hour (whether locations will be assigned with `Daily tracing ID`). Whenever a person updates his/her health state into 'Confirmed', those who has been to the same location at the same time will be alerted, and update status into 'Infected'. Self-quarantine will be assumed.
+
+Preliminary report from a single confirmed person will be look like:
+```
+Simulation Start Time: 2020-04-13T07:00:00
+
+Family Count: 5
+Friend Count: 14
+Coworker Count: 30
+Other Count: 92
+
+--------------------
+Handset ID: bafbf7a027b9426189eba09667ae231c
+Relation to subject: family [SIMULATION DATA ONLY, would not be revealed real-world] 
+Contact periods:
+		2020-04-13T17:00:00
+		2020-04-14T09:00:00
+		2020-04-17T18:00:00
+--------------------
+Handset ID: 867879dcdced4a4681b271c3518bc4c4
+Relation to subject: coworker [SIMULATION DATA ONLY, would not be revealed real-world] 
+Contact periods:
+		2020-04-13T12:00:00
+		2020-04-15T12:00:00
+		2020-04-23T13:00:00 
+--------------------
+...
+
+```
 ## **3. Visualization**
 
 We wanted a visualization to track the evolution of the infection (number of cases, number of deaths, etc) updated in 
