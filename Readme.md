@@ -30,9 +30,10 @@ District:The main districts in Barcelona
 8=Nou Barris
 9=Sant Andreu
 10=Sant Mart
+
 Latitude: Barcelona 41.3851° N, 2.1734° E
 
-Longtitude：41.3851° N, 2.1734° E
+Longtitude：Barcelona 41.3851° N, 2.1734° E
 
 Timestamp：From 001-100 For example, 001=28/04/2020
 
