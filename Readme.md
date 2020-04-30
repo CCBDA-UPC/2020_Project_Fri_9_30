@@ -43,7 +43,8 @@ We wanted a visualization to track the evolution of the infection (number of cas
 real-time whenever there is new data. To do this, we use the `animation` function of `matplotlib`. The code can be
 found at `matplotlibAnimation.py`. 
 
-This is what it looks like.
+This is what it looks like.  
+
 ![animation](images/live%20update%20graph.gif)
 
 
