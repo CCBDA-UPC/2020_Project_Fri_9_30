@@ -20,8 +20,8 @@ Randomy generate following data
 - District:The main districts in Barcelona 
 1=Ciutat Vella, 2=L'Eixample, 3=Sants-Montjuïc, 4=Gràcia, 5=Les Corts, 
 6=Sarri Sant Gervasi, 7=Horta Guinard, 8=Nou Barris, 9=Sant Andreu, 10=Sant Mart
-- Latitude: Barcelona 41.3851° N, 2.1734° E
-- Longtitude：Barcelona 41.3851° N, 2.1734° E
+- Latitude: Barcelona 41.3851° N, 2.1734° E. Variance=0.05 mean= 41.3851° N by standard normal distribution 
+- Longtitude：Barcelona 41.3851° N, 2.1734° E. Variance=0.05 and mean=41.3851° N by standard normal distribution 
 - Timestamp：From 001-100 For example, 001=28/04/2020
 - Health Care Capacity: Control approaches.
 1=Business As Usual 
