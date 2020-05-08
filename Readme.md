@@ -7,6 +7,17 @@
 - yalei.li@est.fib.upc.edu
 - manh.hung.nguyen@est.fib.upc.edu
 
+#### Table of contents
+
+- [1. Lambda function for data generation](#1.-Lambda-function-for-data-generation)
+    - [Data Generation by Lambda Function and S3](#Data-Generation-by-Lambda-Function-and-S3)
+    - [Explanation of dataset](#Explanation-of-dataset)
+- [**2. Lambda function for simulation**](#**2.-Lambda-function-for-simulation**)
+    - [Locally deploy AWS Lambda function](#Locally-deploy-AWS-Lambda-function)
+    - [Using AWS SDK for JavaScript to Call Lambda Functions](#Using-AWS-SDK-for-JavaScript-to-Call-Lambda-Functions)
+        - [Prerequisites](#Prerequisites)
+        - [Connect browser script with Lambda function](#Connect-browser-script-with-Lambda-function)
+
 ## 1. Lambda function for data generation
 ### Data Generation by Lambda Function and S3
 Based on the local data generation code and dataset desgin thinking(Report-Srpint01.md), we generate data by AWS Lambda function and store data in S3. Finally, we make some configuration and share S3 dataset to every teammembers.
@@ -200,3 +211,5 @@ Initial page:
 After click the button:
 `NOT RESPONDING` 
 Potential reason: Lambda function running for too long.
+
+
