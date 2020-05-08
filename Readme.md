@@ -168,28 +168,28 @@ The bucket URL will be used later.
     ![](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/images/identity-pool-id.png)
     
     2. **Edit the browser script.** Here, we first develop a simple `index.html` for running the test result of Lambda function. We need to add the Cognito Identity Pool for the page authentication.
-
-```buildoutcfg
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'IDENTITY_POOL_ID'});
-```
+    
+    ```buildoutcfg
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'IDENTITY_POOL_ID'});
+    ```
 
     3. **Call Lambda function within the browser.** We use `lambda.invoke` to call the lambda function to run our simulation.
     
     ```
     var params = {
-  FunctionARN: 'function', /* required */
-  ClientContext: 'Null',
-  InvocationType: Event | RequestResponse | DryRun,
-  LogType: None | Tail,
-  Payload: Buffer.from('...') || 'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */
-};
-
-function callAwsLambdaFunction() {
-    lambda.invoke(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else console.log(data);           // successful response
-    })
-};
+        FunctionARN: 'function', /* required */
+        ClientContext: 'Null',
+        InvocationType: Event | RequestResponse | DryRun,
+        LogType: None | Tail,
+        Payload: Buffer.from('...') || 'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */
+    };
+    
+    function callAwsLambdaFunction() {
+        lambda.invoke(params, function(err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else console.log(data);           // successful response
+        })
+    };
     ``` 
 
 4. **Run the Lambda.** We upload the `index.html` to S3 buckt, and run the lambda function thru the webpage.
