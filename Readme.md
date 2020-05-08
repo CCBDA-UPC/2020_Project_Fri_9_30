@@ -12,7 +12,7 @@
 - [1. Lambda function for data generation](#1.-Lambda-function-for-data-generation)
     - [Data Generation by Lambda Function and S3](#Data-Generation-by-Lambda-Function-and-S3)
     - [Explanation of dataset](#Explanation-of-dataset)
-- [**2. Lambda function for simulation**](#**2.-Lambda-function-for-simulation**)
+- [2. Lambda function for simulation](#2.-Lambda-function-for-simulation)
     - [Locally deploy AWS Lambda function](#Locally-deploy-AWS-Lambda-function)
     - [Using AWS SDK for JavaScript to Call Lambda Functions](#Using-AWS-SDK-for-JavaScript-to-Call-Lambda-Functions)
         - [Prerequisites](#Prerequisites)
@@ -54,7 +54,7 @@ Randomy generate following data:
 
 <p align="center"><img src="./images/Dataset_Screenshot.png" width="70%" height="70%" alt="sampledata"/></p>
 
-## **2. Lambda function for simulation**
+## 2. Lambda function for simulation
 
 ### Locally deploy AWS Lambda function
 
