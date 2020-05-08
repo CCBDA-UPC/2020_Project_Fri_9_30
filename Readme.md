@@ -11,16 +11,16 @@
 
 - [Cloud Computing Project Challenge (*Sprint 02*)](#Cloud-Computing-Project-Challenge-(*Sprint-02*))
     - [Members:](#Members:)
-    - [1. Lambda function for data generation](#1.-Lambda-function-for-data-generation)
+    - [1. Lambda function for data generation](#1-Lambda-function-for-data-generation)
         - [Data Generation by Lambda Function and S3](#Data-Generation-by-Lambda-Function-and-S3)
         - [Explanation of dataset](#Explanation-of-dataset)
-    - [2. Lambda function for simulation](#2.-Lambda-function-for-simulation)
+    - [2. Lambda function for simulation](#2-Lambda-function-for-simulation)
         - [Locally deploy AWS Lambda function](#Locally-deploy-AWS-Lambda-function)
         - [Using AWS SDK for JavaScript to Call Lambda Functions](#Using-AWS-SDK-for-JavaScript-to-Call-Lambda-Functions)
             - [Prerequisites](#Prerequisites)
             - [Connect browser script with Lambda function](#Connect-browser-script-with-Lambda-function)
 
-## 1. Lambda function for data generation
+## 1 Lambda function for data generation
 ### Data Generation by Lambda Function and S3
 Based on the local data generation code and dataset desgin thinking(Report-Srpint01.md), we generate data by AWS Lambda function and store data in S3. Finally, we make some configuration and share S3 dataset to every teammembers.
 
@@ -56,7 +56,7 @@ Randomy generate following data:
 
 <p align="center"><img src="./images/Dataset_Screenshot.png" width="70%" height="70%" alt="sampledata"/></p>
 
-## 2. Lambda function for simulation
+## 2 Lambda function for simulation
 
 ### Locally deploy AWS Lambda function
 
