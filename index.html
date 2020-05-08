@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.92.0.min.js"></script>
+<script type="text/javascript">
+	// Configure AWS SDK for JavaScript & set region and credentials
+    // Initialize the Amazon Cognito credentials provider
+    AWS.config.region = 'eu-west-1'; // Region
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'eu-west-1:3e605abf-8c98-41e8-80ba-489b0d8055d0',
+});
+
+var params = {
+  FunctionARN: 'arn:aws:lambda:eu-west-1:747691686411:function:simulationTesting-HelloWorldFunction-3XG0FO5TCA9F', /* required */
+  ClientContext: 'Null',
+  InvocationType: Event | RequestResponse | DryRun,
+  LogType: None | Tail,
+  Payload: Buffer.from('...') || 'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */
+};
+
+function callAwsLambdaFunction() {
+    lambda.invoke(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);           // successful response
+    })
+};
+
+    </script>
+
+    <title>Simulation Test</title>
+    </head>
+    <body>
+        <h1>Simulation Test</h1>
+        <h1>Click below button to call simulation test and display result below!</h1>
+        <h1><div id="myDiv"></div></h1>
+        <button onclick="callAwsLambdaFunction()">Click me!</button><br>
+    </body>
+</html>

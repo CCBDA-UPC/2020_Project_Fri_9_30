@@ -111,7 +111,92 @@ The diagram illustrate most of the elements in this simulation application and h
 
 ![sdk-lambda](images/sdk-lambda.png)
 
-### Prerequisites
+#### Prerequisites
 
-1. Install Node.js locally to run various scripts that help set up the Amazon S3 bucket, and create and configure the Lambda function. The Lambda function itself runs in the AWS Lambda Node.js environment. For information about installing Node.js, see [www.nodejs.org](www.nodejs.org).
+1. Install Node.js locally to run various scripts that help set up the Amazon S3 bucket, and create and configure the Lambda function. The Lambda function itself runs in the AWS Lambda Node.js environment. (node is pre-installed in the testing machine).
 
+2. Install AWS SDK for JavaScript locally to run the setip scripts.
+```buildoutcfg
+npm install aws-sdk
+```
+
+Successful install shows:
+```buildoutcfg
+npm WARN deprecated buffer@4.9.1: This version of 'buffer' is out-of-date. You must update to v4.9.2 or newer
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN slotassets No description
+npm WARN slotassets No repository field.
+npm WARN slotassets No license field.
+
++ aws-sdk@2.672.0
+removed 1 package, updated 1 package and audited 17 packages in 2.708s
+found 0 vulnerabilities
+```
+
+#### Connect browser script with Lambda function
+Main structure is referred to [AWS official tutorial](https://github.com/awsdocs/aws-doc-sdk-examples/blob/master/javascript/example_code/lambda/tutorial/slotassets.zip) with modification. Detailed steps are shown below:
+
+1. Create a JSON file `config.json` with the account credentials in the working directory. The content follows content:
+
+```buildoutcfg
+{ "accessKeyId": <YOUR_ACCESS_KEY_ID>, "secretAccessKey": <YOUR_SECRET_ACCESS_KEY>, "region": "us-east-1" }
+``` 
+
+This file is used by the setup scripts to authenticate their AWS requests, using the following command:
+```buildoutcfg
+AWS.config.loadFromPath('./config.json');
+```
+
+2. **Create an Amazon S3 bucket configured as a static website.** Here, we will use the bucket to store all the browser assets, including HTML files, and the CSS files. It is configured as a static website so that it also serves the application from the bucket's URL.
+
+```buildoutcfg
+node s3-bucket-setup.js sdktestingyalei
+```
+
+Successful result:
+```buildoutcfg
+Bucket URL is  /sdktestingyalei 
+Success {}
+```
+
+The bucket URL will be used later.
+
+3. **Prepare the browser script.** Save the edited copy of `index.html` for upload to Amazon S3.
+
+    1. We first need to **prepare an Amazon Cognito Identity Pool.** The JavaScript code in the browser script needs authentication to access AWS services. Within webpages, we typically use Amazon Cognito Identity to do this authentication. Details can be found in [AWS official document](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-lambda-browser-script.html). 
+    We get the AWS credentials as following:
+    ![](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/images/identity-pool-id.png)
+    
+    2. **Edit the browser script.** Here, we first develop a simple `index.html` for running the test result of Lambda function. We need to add the Cognito Identity Pool for the page authentication.
+
+```buildoutcfg
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'IDENTITY_POOL_ID'});
+```
+
+    3. **Call Lambda function within the browser.** We use `lambda.invoke` to call the lambda function to run our simulation.
+    
+    ```
+    var params = {
+  FunctionARN: 'function', /* required */
+  ClientContext: 'Null',
+  InvocationType: Event | RequestResponse | DryRun,
+  LogType: None | Tail,
+  Payload: Buffer.from('...') || 'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */
+};
+
+function callAwsLambdaFunction() {
+    lambda.invoke(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);           // successful response
+    })
+};
+    ``` 
+
+4. **Run the Lambda.** We upload the `index.html` to S3 buckt, and run the lambda function thru the webpage.
+
+Initial page: 
+![webtemp](images/webtemp.png)
+
+After click the button:
+`NOT RESPONDING` 
+Potential reason: Lambda function running for too long.
