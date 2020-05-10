@@ -1,8 +1,8 @@
-#Introduction to Docker and Elastic Container Service (ECS)
+# Introduction to Docker and Elastic Container Service (ECS)  
 
 This tutorial is adapted from an excellent [Docker Tutorial](https://docker-curriculum.com/#introduction) by Prakhar Srivastav.
 
-##What is Docker?
+## What is Docker?  
 Docker is a tool that allows developers to easily deploy their applications in a *container*. From the Docker website:
 
 > Multiple languages, frameworks, architectures, and discontinuous interfaces between tools for each lifecycle stage creates enormous complexity. Docker simplifies and accelerates your workflow, while giving developers the freedom to innovate with their choice of tools, application stacks, and deployment environments for each project.
@@ -13,7 +13,7 @@ Some benefits:
 2. Portability
 3. Decoupling allows for more granular control over each container, which can be used for optimization.
 
-##Getting Started
+## Getting Started   
 
 We need to do some preparation before diving into Docker.
 
@@ -22,17 +22,17 @@ We need to do some preparation before diving into Docker.
 
 **Note**: If your machine is not compatible, you can use [Docker Toolbox](https://docs.docker.com/toolbox/overview/) instead.
 
-##Hello World
+## Hello World  
 Once installed, open your Docker terminal and run the following command to test whether everything is set up perfectly.  
 
 `docker run hello world`
 
-![insert screenshot](images/1 docker hello world.png)
+![](images/1%20docker%20hello%20world.png)
 
 **Q1: Describe where docker finds the *image* of hello-world**  
 **Q2: What do you think happened when we call the function `run`?**
 
-##Useful Docker Commands
+## Useful Docker Commands  
 
 Let's use another *image* to run in docker.  
 Type in `docker run busybox echo "hello from busybox"`
@@ -57,7 +57,7 @@ To clear all stopped containers, we can use `docker container prune`
 Last but not least, we use `docker image` to see a list of images stored locally.
 To delete an image, use `docker rmi [image ID]`
 
-##Building a Docker Image
+## Building a Docker Image  
 Now we are going to create our own docker image. In this section, we will create an image that sandboxes a simple Flask application.
 This application is a web app that will randomly load a cat `.gif`.
 
@@ -65,7 +65,7 @@ To start, please clone the following repo:
 
 ![](images/6%20clone.png)
 
-*Note*: use a terminal to clone the repo and not from the Docker terminal
+**Note**: use a terminal to clone the repo and not from the Docker terminal
 
 Locate the `Dockerfile` and open it. It should look something like this.
 
@@ -109,7 +109,7 @@ Head over to `localhost:5000` on your browser to see the result.
 
 **Note:** If you are using Docker Toolbox, you might not be able to connect to localhost. To solve this:
 
-1. Find out which virtual machine your Docker terminal is using. You can find this at the beginning of your docker terminal. Mine is called `default`.
+1. Find out which virtual machine your Docker terminal is using. You can find this at the beginning of your docker terminal. Mine is called `default`.   
 ![](images/17%20default.png)
 2. Type `docker-machine stop [your machine name]`
 3. Search for 'VirtualBox' on your computer.
@@ -122,7 +122,7 @@ Head over to `localhost:5000` on your browser to see the result.
 
 Congrats on building your first Docker Image!
 
-##Deploying Docker on ECS
+## Deploying Docker on ECS  
 
 Now we will try to use multiple docker containers and deploy them to ECS. For this example, we will use a web app that displays the number of food trucks.
 
@@ -132,7 +132,7 @@ The backend is built on Python (Flask) and the search function is provided by El
 We can see that the application consists of a Flask backend server and an Elasticsearch service. A natural way to split this app would be to have two containers - 
 one running the Flask process and another running the Elasticsearch (ES) process. That way if our app becomes popular, we can scale it by adding more containers depending on where the bottleneck lies.
 
-###Building Foodtruck Image
+### Building Foodtruck Image  
 
 First, let's clone the repository from [here](https://github.com/aristonhariantolim/cctutorial-foodtruck). I have modified the codes from the original to hopefully make it less buggy.
 
@@ -149,7 +149,7 @@ Type `docker login`. You will be asked to enter your credentials. Use your usern
 
 When that's done, type `docker push yourusername/foodtrucks-web`.
 
-###Configure ECS
+### Configure ECS  
 
 First step we need to do is to install CLI for ECS. Refer to [this document](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html) on how to install.
 Once that's done, test the installation by checking the version as shown below.
@@ -180,7 +180,7 @@ Our cluster is created! All we need is to run the images on the containers on EC
 
 **Q3: What do you think all the parameters mean?**
 
-###Docker Compose
+### Docker Compose  
 Go to `aws-ecs` folder. Inside, you will find a `docker-compose.yml`. Open it up and see what's inside.
 
 ![](images/24%20yml.png)
