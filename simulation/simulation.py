@@ -1,6 +1,8 @@
 import json
 import os
 import sys
+from datetime import time
+
 import boto3
 import pandas as pd
 import numpy as np
@@ -193,7 +195,7 @@ dead: %i, of total: %i' %(self.frame, self.pop_tracker.susceptible[-1], self.pop
 
 
 if __name__ == '__main__':
-    sqs = boto3.client('sqs')
+    sqs = boto3.client('sqs', region_name='eu-west-1')
     queue_url = 'https://sqs.eu-west-1.amazonaws.com/355914966584/jobs.fifo'
     while(True):
         try:
@@ -255,6 +257,7 @@ if __name__ == '__main__':
         except Exception as e:
             print(e)
             print("No available jobs")
+            time.sleep(5)
 
 
 
