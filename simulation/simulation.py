@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from datetime import time
+import time
 
 import boto3
 import pandas as pd
@@ -253,8 +253,10 @@ if __name__ == '__main__':
 
             # run, hold CTRL+C in terminal to end scenario early
             sim.run()
+            time.sleep(2)
 
         except Exception as e:
+            time.sleep(5)
             print(e)
             print("No available jobs")
             time.sleep(5)
