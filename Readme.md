@@ -29,3 +29,32 @@ Then, the website sends the message to SQS on the base of EB. The FIFO queue can
 </p>
 
 ## 3. Auto-scaling
+
+![1](images/auto1.png)
+![2](images/audo2.png)
+
+auto scaling policies
+
+get SQS messages
+
+'''aws sqs get-queue-attributes --queue-url https://sqs.region.amazonaws.com/123456789/MyQueue --attribute-names ApproximateNumberOfMessages'''
+
+![3](images/audo3.png)
+
+Get capacity(Inservice EC2)
+
+![4](images/audo4.png)
+
+ApproximateNumberOfMessages/inservice instances=20000/5=4000
+
+![5](images/audo5.png)
+
+Set alarms and scaling policies based on SQS size
+
+![6](images/audo6.png)
+
+Results
+
+![7](images/audo7.png)
+![8](images/audo8.png)
+![9](images/audo9.png)
