@@ -50,9 +50,9 @@ Set alarms
 aws cloudwatch put-metric-data --metric-name MyBacklogPerInstance --namespace MyNamespace --unit None --value 20 --dimensions MyOptionalMetricDimensionName=MyOptionalMetricDimensionValue
 ```
 
-![5](images/audo5.png)
-
 set scaling policies based on SQS size
+
+![5](images/audo5.png)
 
 ![6](images/audo6.png)
 
