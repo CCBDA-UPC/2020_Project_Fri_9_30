@@ -24,4 +24,8 @@ Then, the website sends the message to SQS on the base of EB. The FIFO queue can
 
 ## 2. Simulation on EC2 instances
 
+<p align="center">
+<img src="/images/ec2-processing.png" alt="drawing" width="600"/>
+</p>
+
 ## 3. Auto-scaling
