@@ -37,20 +37,21 @@ get SQS messages
 aws sqs get-queue-attributes --queue-url https://sqs.region.amazonaws.com/123456789/MyQueue --attribute-names ApproximateNumberOfMessages
 ```
 
-![3](images/audo3.png)
-
 Get capacity(Inservice EC2)
 
-![4](images/audo4.png)
+![3](images/audo3.png)
 
 ApproximateNumberOfMessages/inservice instances=20000/5=4000
 
-![5](images/audo5.png)
+![4](images/audo4.png)
 
 Set alarms
 ```
 aws cloudwatch put-metric-data --metric-name MyBacklogPerInstance --namespace MyNamespace --unit None --value 20 --dimensions MyOptionalMetricDimensionName=MyOptionalMetricDimensionValue
 ```
+
+![5](images/audo5.png)
+
 set scaling policies based on SQS size
 
 ![6](images/audo6.png)
