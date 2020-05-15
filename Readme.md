@@ -7,6 +7,7 @@
 - yalei.li@est.fib.upc.edu
 - manh.hung.nguyen@est.fib.upc.edu
 
+<p align="center"><img src="/images/processes-flow.png" alt="drawing" width="600"/></p>
 
 ## 1. SQS message queue
 In order to better connect our client with our simulation application, we deploy a Django website with Elastic Beanstalk. Here, we refer [SQS](https://github.com/CCBDA-UPC/Research-projects-2020/tree/master/05_SQS) tutorial to integrate the website with SQS service. In the case of this step, Python (boto3) has the necessary libraries to operate SQS services without any problem.
@@ -24,9 +25,13 @@ Then, the website sends the message to SQS on the base of EB. The FIFO queue can
 
 ## 2. Simulation on EC2 instances
 
-<p align="center">
-<img src="/images/ec2-processing.png" alt="drawing" width="600"/>
-</p>
+Due to the time limits of AWS Lambda function, we decided to move the simulation module to EC2 instances, which is more suitable for computationally intensive jobs. Once EC2 instances started, they keep pulling new messages from a given SQS url and running simulations with parameters passed in SQS messages. After successfully received a message, we deleted it from the SQS queue. The auto-scaling management is explained in the next section.
+
+<p align="center"><img src="/images/ec2-processing.png" alt="drawing" width="600"/></p>
+<p align="center">Pulling messages from SQS queue and runnning simulations</p>
+
+
+
 
 ## 3. Auto-scaling
 
