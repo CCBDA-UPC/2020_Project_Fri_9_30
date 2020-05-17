@@ -249,32 +249,22 @@ def pull_jobs():
                 VisibilityTimeout=30,
                 WaitTimeSeconds=0
             )
-            message = response['Messages'][0]
-            body = message['Body']
 
             # Delete the received message
+            message = response['Messages'][0]
             receipt_handle = message['ReceiptHandle']
             sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=receipt_handle)
 
             # Parse the message to get parameters
-            parameters = json.loads(body)
-            print(parameters)  # {"pop_size": "100", "lock_down": "False"}
+            parameters = message['MessageAttributes']
+            print(parameters)
 
             # initialize
             sim = Simulation()
 
-            sim.Config.pop_size = int(parameters['pop_size'])
+            sim.Config.pop_size = int(parameters['pop_size']['StringValue']) # Set population size
+            sim.Config.simulation_steps = 10 # set number of simulation steps
 
-            # set number of simulation steps
-            sim.Config.simulation_steps = 10
-
-            # set color mode
-            sim.Config.plot_style = 'default'  # can also be dark
-
-            # set colorblind mode if needed
-            # sim.Config.colorblind_mode = True
-            # set colorblind type (default deuteranopia)
-            # sim.Config.colorblind_type = 'deuteranopia'
 
             # set reduced interaction
             # sim.Config.set_reduced_interaction()
@@ -289,9 +279,7 @@ def pull_jobs():
             #                              traveling_infects=False)
             # sim.population_init() #reinitialize population to enforce new roaming bounds
 
-            # run, hold CTRL+C in terminal to end scenario early
             sim.run()
-            time.sleep(2)
 
         except Exception as e:
             print(e)
@@ -299,5 +287,5 @@ def pull_jobs():
             time.sleep(30) ## Check jobs every 30 secs
 
 if __name__ == '__main__':
-    run_locally() ## test simulation locally
-    # pull_jobs() ## start pulling jobs
+    # run_locally() ## test simulation locally
+    pull_jobs() ## start pulling jobs
