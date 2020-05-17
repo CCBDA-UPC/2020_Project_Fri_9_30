@@ -171,8 +171,10 @@ class Simulation():
 
     def send_results(self):
         # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
-        # Draw one graph with 5 lines for: healthy, infected, immune, in treatment, dead
         print(self.log)
+
+        # TODO: Draw one graph with 5 lines for: healthy, infected, immune, in treatment, dead
+        # TODO: Send the graph to clients via emails
 
     def run(self):
         '''run simulation'''
