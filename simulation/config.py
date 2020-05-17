@@ -46,7 +46,7 @@ class Configuration():
         self.colorblind_type = 'deuteranopia'
         
         #population variables
-        self.pop_size = 100
+        self.pop_size = 1000
         self.mean_age = 45
         self.max_age = 105
         self.age_dependent_risk = True #whether risk increases with age
