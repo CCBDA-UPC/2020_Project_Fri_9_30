@@ -310,28 +310,19 @@ def pull_jobs():
             print(parameters)
 
             # initialize
-            sim = Simulation()
+            sim1 = Simulation()
             sim2 = Simulation()
 
+            sim1.Config.email = parameters['email']['StringValue']
+            sim2.Config.email = parameters['email']['StringValue']
 
-            sim.Config.email = parameters['email']['StringValue']
-            sim.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
-            # sim.Config.simulation_steps = 10  # set number of simulation steps
+            sim1.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
+            sim2.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
 
-            # set reduced interaction
-            # sim.Config.set_reduced_interaction()
-            # sim.population_init()
+            sim1.run()
+            sim2.run()
 
-            # set lockdown scenario
-            # sim.Config.set_lockdown(lockdown_percentage = 0.1, lockdown_compliance = 0.95)
-
-            # set self-isolation scenario
-            # sim.Config.set_self_isolation(self_isolate_proportion = 0.9,
-            #                              isolation_bounds = [0.02, 0.02, 0.09, 0.98],
-            #                              traveling_infects=False)
-            # sim.population_init() #reinitialize population to enforce new roaming bounds
-
-            sim.run()
+            send_results(sim1, sim2)
 
         except Exception as e:
             print(e)
@@ -340,5 +331,5 @@ def pull_jobs():
 
 
 if __name__ == '__main__':
-    run_locally()  ## test simulation locally
-# pull_jobs() ## start pulling jobs
+    # run_locally()  ## test simulation locally
+    pull_jobs() ## start pulling jobs
