@@ -186,7 +186,7 @@ def infect(population, Config, frame, send_to_location=False,
                 if poplen > 0:
                     if Config.contact_tracing:
                         # not all people will follow the App indication
-                        if np.random.random() < Config.EFFICIENCY * Config.amtHasApp:
+                        if np.random.random() < Config.contact_tracing_compliance * Config.app_installed_probability:
                             # set complying people to quarantine
                             population[np.int32(person[0])][15] = 1
                             population[np.int32(person[0])][5] = 0
@@ -232,7 +232,7 @@ def recover_or_die(population, frame, Config):
     frame : int
         the current timestep of the simulation
 
-    recovery_duration : tuple
+    fighting_duration : tuple
         lower and upper bounds of duration of recovery, in simulation steps
 
     mortality_chance : float
@@ -274,7 +274,7 @@ def recover_or_die(population, frame, Config):
             quarantine_duration = frame - people[16]
             if quarantine_duration >= Config.incubation_stage_duration:
                 if people[6] == 1:
-                    if np.random.random() >= (1 - Config.mortality_chance):
+                    if np.random.random() >= (1 - Config.mortality_probability):
                         people[6] = 2
                         people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
                     else:
@@ -289,7 +289,7 @@ def recover_or_die(population, frame, Config):
     #define vector of how long everyone has been sick
     illness_duration_vector = frame - infected_people[:,8]
     
-    recovery_odds_vector = (illness_duration_vector - Config.recovery_duration[0]) / np.ptp(Config.recovery_duration)
+    recovery_odds_vector = (illness_duration_vector - Config.fighting_duration[0]) / np.ptp(Config.fighting_duration)
     recovery_odds_vector = np.clip(recovery_odds_vector, a_min = 0, a_max = None)
 
     #update states of sick people 
@@ -303,13 +303,13 @@ def recover_or_die(population, frame, Config):
         #check if we want risk to be age dependent
         #if age_dependent_risk:
         if Config.age_dependent_risk:
-            updated_mortality_chance = compute_mortality(infected_people[infected_people[:,0] == idx][:,7][0], 
-                                                            Config.mortality_chance,
-                                                            Config.risk_age, Config.critical_age, 
-                                                            Config.critical_mortality_chance, 
-                                                            Config.risk_increase)
+            updated_mortality_chance = compute_mortality(infected_people[infected_people[:,0] == idx][:,7][0],
+                                                         Config.mortality_probability,
+                                                         Config.risk_age, Config.critical_age,
+                                                         Config.critical_mortality_chance,
+                                                         Config.risk_increase)
         else:
-            updated_mortality_chance = Config.mortality_chance
+            updated_mortality_chance = Config.mortality_probability
 
         if infected_people[infected_people[:,0] == int(idx)][:,10] == 0 and Config.treatment_dependent_risk:
             #if person is not in treatment, increase risk by no_treatment_factor

@@ -40,10 +40,6 @@
                 <div class="modal-body">
                     <form id="signupForm" role="form">
                         <div class="form-group">
-                            <label for="MessageGroupId">Message Group Id</label>
-                            <input type="text" class="form-control" id="MessageGroupId" name="MessageGroupId" placeholder="Your message group id">
-                        </div>
-                        <div class="form-group">
                             <label for="email">Your email to receive the result</label>
                             <input type="text" class="form-control" id="email" name="email" placeholder="Verified email address">
                         </div>
@@ -60,33 +56,33 @@
                             <input type="text" class="form-control" id="symptomatic_stage_duration" name="symptomatic_stage_duration" placeholder="e.g. 48 (for 2 days)">
                         </div>
                         <div class="form-group">
-                            <label for="min_recovery_duration">Set min recovery duration (in hours)</label>
-                            <input type="text" class="form-control" id="min_recovery_duration" name="min_recovery_duration" placeholder="e.g. 200">
+                            <label for="min_fighting_duration">Set min recovery duration (in hours)</label>
+                            <input type="text" class="form-control" id="min_fighting_duration" name="min_fighting_duration" placeholder="e.g. 200">
                         </div>
                         <div class="form-group">
-                            <label for="max_recovery_duration">Set max recovery duration (in hours)</label>
-                            <input type="text" class="form-control" id="max_recovery_duration" name="max_recovery_duration" placeholder="e.g. 500">
+                            <label for="max_fighting_duration">Set max recovery duration (in hours)</label>
+                            <input type="text" class="form-control" id="max_fighting_duration" name="max_fighting_duration" placeholder="e.g. 500">
                         </div>
                         <div class="form-group">
-                            <label for="mortality_prob">Set basic mortality probability (<1)</label>
-                            <input type="text" class="form-control" id="mortality_prob" name="mortality_prob" placeholder="e.g. 0.05">
+                            <label for="mortality_probability">Set basic mortality probability (<1)</label>
+                            <input type="text" class="form-control" id="mortality_probability" name="mortality_probability" placeholder="e.g. 0.05">
+                        </div>
+                        <div class="form-group">
+                            <label for="mean_number_of_transmission_events_per_hour">Set avaerage number of transmission events per hour (int)</label>
+                            <input type="text" class="form-control" id="mean_number_of_transmission_events_per_hour" name="mean_number_of_transmission_events_per_hour" placeholder="e.g. 5">
+                        </div>
+                        <div class="form-group">
+                            <label for="app_installed_probability">Set app coverage (% of population have the app)</label>
+                            <input type="text" class="form-control" id="app_installed_probability" name="app_installed_probability" placeholder="e.g. 0.9">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_tracing_compliance">Set app compliance probability (% of complying people)</label>
+                            <input type="text" class="form-control" id="contact_tracing_compliance" name="contact_tracing_compliance" placeholder="e.g. 0.9">
                         </div>
 <!--                        <div class="form-group">-->
-<!--                            <label for="mean_number_of_transmission_events_per_hour">Set avaerage number of transmission events per hour (int)</label>-->
-<!--                            <input type="text" class="form-control" id="mean_number_of_transmission_events_per_hour" name="mean_number_of_transmission_events_per_hour" placeholder="e.g. 5">-->
+<!--                            <label for="healthcare_capacity">Set healthcare capacity (int)</label>-->
+<!--                            <input type="text" class="form-control" id="healthcare_capacity" name="healthcare_capacity" placeholder="e.g. 300">-->
 <!--                        </div>-->
-                        <div class="form-group">
-                            <label for="amt_has_app">Set app coverage (% of population have the app)</label>
-                            <input type="text" class="form-control" id="amt_has_app" name="amt_has_app" placeholder="e.g. 0.9">
-                        </div>
-                        <div class="form-group">
-                            <label for="efficiency">Set app efficiency (% of complying people)</label>
-                            <input type="text" class="form-control" id="efficiency" name="efficiency" placeholder="e.g. 0.9">
-                        </div>
-                        <div class="form-group">
-                            <label for="healthcare_capacity">Set healthcare capacity (int)</label>
-                            <input type="text" class="form-control" id="healthcare_capacity" name="healthcare_capacity" placeholder="e.g. 300">
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
