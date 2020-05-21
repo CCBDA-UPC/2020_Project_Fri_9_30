@@ -267,12 +267,13 @@ def run_locally():
     # Config
     config1 = Configuration()
     config1.contact_tracing = False
-    config1.pop_size = 1500
+    config1.pop_size = 1000
     config1.email = "hungnm.vnu@gmail.com"
 
     config2 = Configuration()
     config2.contact_tracing = True
-    config2.pop_size = 1500
+    config2.set_contact_tracing(amt_has_app=1, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
+    config2.pop_size = 1000
     config2.email = "hungnm.vnu@gmail.com"
 
     # initialize
@@ -283,8 +284,6 @@ def run_locally():
     sim1.run()
     sim2.run()
 
-    # set contact tracing scenario
-    # sim1.Config.set_contact_tracing(amt_has_app=1, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
 
     # Send emails
     send_results(sim1, sim2)
@@ -342,5 +341,5 @@ def pull_jobs():
 
 
 if __name__ == '__main__':
-    # run_locally()  ## test simulation locally
-    pull_jobs() ## start pulling jobs
+    run_locally()  ## test simulation locally
+    # pull_jobs() ## start pulling jobs
