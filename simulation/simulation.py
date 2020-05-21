@@ -30,33 +30,34 @@ from ses import sent
 # np.random.seed(100)
 
 def differences_calculation(sim1, sim2):
-    messages = "\nBy using Contact Tracing System: \n"
+    message1 = ""
     if len(sim2.population[sim2.population[:, 6] == 3]) < len(sim1.population[sim1.population[:, 6] == 3]):
-        messages += "\nThe number of deaths decreases by: " + \
+        message1 += "\nThe number of deaths decreases by: " + \
                     str(round(((len(sim1.population[sim1.population[:, 6] == 3]) - len(
                         sim2.population[sim2.population[:, 6] == 3]))
                                / (len(sim1.population[sim1.population[:, 6] == 3])+1) * 100), 2)) + "%"
     else:
-        messages += "\nThe number of deaths increases by: " + \
+        message1 += "\nThe number of deaths increases by: " + \
                     str(round(((len(sim2.population[sim2.population[:, 6] == 3]) - len(
                         sim1.population[sim1.population[:, 6] == 3]))
                                / (len(sim1.population[sim1.population[:, 6] == 3])+1) * 100), 2)) + "%"
 
-    if len(sim2.population[sim2.population[:, 6] == 3]) < len(sim1.population[sim1.population[:, 6] == 3]):
-        messages += "\nThe number of infected people decreases by: " + \
-                    str(round(((len(sim1.population[sim1.population[:, 6] == 1]) - len(
-                        sim2.population[sim2.population[:, 6] == 1])+1)
-                               / (len(sim1.population[sim1.population[:, 6] == 1])+1) * 100), 2)) + "%"
+    message2 = ""
+    if len(sim2.population[sim2.population[:, 6] == 2]) < len(sim1.population[sim1.population[:, 6] == 2]):
+        message2 += "\nThe number of infected people decreases by: " + \
+                    str(round(((len(sim1.population[sim1.population[:, 6] == 2]) - len(
+                        sim2.population[sim2.population[:, 6] == 2])+1)
+                               / (len(sim1.population[sim1.population[:, 6] == 2])+1) * 100), 2)) + "%"
     else:
-        messages += "\nThe number of infected people increases by: " + \
-                    str(round(((len(sim2.population[sim2.population[:, 6] == 1]) - len(
-                        sim1.population[sim1.population[:, 6] == 1]))
-                               / (len(sim1.population[sim1.population[:, 6] == 1])+1) * 100), 2)) + "%"
+        message2 += "\nThe number of infected people increases by: " + \
+                    str(round(((len(sim2.population[sim2.population[:, 6] == 2]) - len(
+                        sim1.population[sim1.population[:, 6] == 2]))
+                               / (len(sim1.population[sim1.population[:, 6] == 2])+1) * 100), 2)) + "%"
 
-    return messages
+    return message1,message2
 
 def send_results(sim1, sim2):
-    messages = differences_calculation(sim1,sim2)
+    message1, message2 = differences_calculation(sim1,sim2)
 
     client = boto3.client('s3', region_name='eu-west-1')
     # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
@@ -67,6 +68,10 @@ def send_results(sim1, sim2):
         """ % sim1.log)
     df = pd.read_csv(TESTDATA, sep=";")
     print(df)
+
+    plt.clf()
+    plt.cla()
+    plt.close()
 
     ax = plt.gca()
     df.plot(kind='line', x='Day', y='healthy', color='orange', ax=ax)
@@ -88,6 +93,10 @@ def send_results(sim1, sim2):
     df2 = pd.read_csv(TESTDATA2, sep=";")
     print(df2)
 
+    plt.clf()
+    plt.cla()
+    plt.close()
+
     ax2 = plt.gca()
     df2.plot(kind='line', x='Day', y='healthy', color='orange', ax=ax2)
     df2.plot(kind='line', x='Day', y='infected', color='lightcoral', ax=ax2)
@@ -96,6 +105,10 @@ def send_results(sim1, sim2):
     df2.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax2)
 
     plt.savefig('result/contact-tracing.png')  # simulation result
+
+    plt.clf()
+    plt.cla()
+    plt.close()
 
     # ---------- Upload images ----------- #
 
@@ -108,7 +121,7 @@ def send_results(sim1, sim2):
     client.upload_file('result/contact-tracing.png', 'simulationresult2', contacttracing)
 
     # ---------- Send an email ----------- #
-    sent(noContactTracing, contacttracing, sim1.Config.pop_size, str(sim1.Config.contact_tracing), sim1.Config.email, messages)
+    sent(noContactTracing, contacttracing, sim1.Config.pop_size, "True", sim1.Config.email, message1, message2)
 
 class Simulation():
 
@@ -300,7 +313,7 @@ def run_locally():
 
     config2 = Configuration()
     config2.contact_tracing = True
-    config2.set_contact_tracing(amt_has_app=0, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
+    config2.set_contact_tracing(amt_has_app=0.9, EFFICIENCY=0.8, symptomatic_stage_duration=48, incubation_stage_duration=336)
     config2.pop_size = 2000
     config2.email = "hungnm.vnu@gmail.com"
 
@@ -341,14 +354,17 @@ def pull_jobs():
 
             # Config
             config1 = Configuration()
-            # config1.contact_tracing = False
+            config1.contact_tracing = False
             config1.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
             config1.email = parameters['email']['StringValue']  # Set email
 
             config2 = Configuration()
-            # config2.contact_tracing = True
+            config2.contact_tracing = True
+            config2.set_contact_tracing(amt_has_app=0.9, EFFICIENCY=0.8, symptomatic_stage_duration=48,
+                                        incubation_stage_duration=336)
             config2.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
             config2.email = parameters['email']['StringValue']  # Set email
+
 
             # initialize
             sim1 = Simulation(config1)
@@ -368,5 +384,5 @@ def pull_jobs():
 
 
 if __name__ == '__main__':
-    run_locally()  ## test simulation locally
-    # pull_jobs() ## start pulling jobs
+    # run_locally()  ## test simulation locally
+    pull_jobs() ## start pulling jobs

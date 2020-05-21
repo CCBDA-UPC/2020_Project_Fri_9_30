@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 
 
 # file:statistic, file2:contacttracing
-def sent(file, file2, population, contact_tracing, email, messages):
+def sent(file, file2, population, contact_tracing, email, message1, message2):
     SENDER = "Alice <yuhsuanchen.alice@gmail.com>"
 
     RECIPIENT = email
@@ -117,8 +117,8 @@ def sent(file, file2, population, contact_tracing, email, messages):
 <p style="font-size: 16px; line-height: 1.5; word-break: break-word; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px;">Here is the simulation report based on the parameter that you provide.
 <br/>Simulated population:{pop_size}
 <br/>Contact Tracing System:{contact_tracing}
-<br/>Parameter:OOO
-<br/>{messages}
+<br/>{message1}
+<br/>{message2}
 </span></p>
 </div>
 </div>
@@ -253,7 +253,8 @@ def sent(file, file2, population, contact_tracing, email, messages):
 </table>
 </body>
     </html>
-    """.format(statistic=file, contacttracing=file2, pop_size=population, contact_tracing=contact_tracing, messages=messages)
+    """.format(statistic=file, contacttracing=file2, pop_size=population, contact_tracing=contact_tracing,
+               message1=message1, message2=message2)
 
     # The character encoding for the email.
     CHARSET = "UTF-8"
