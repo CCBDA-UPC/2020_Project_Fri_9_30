@@ -1,4 +1,4 @@
-# Cloud Computing Project Challenge (*Sprint 03*)
+# Cloud Computing Project Challenge (*Sprint 04*)
 
 ## Members:
 - ariston.harianto.lim@est.fib.upc.edu
@@ -12,6 +12,16 @@
 ## 1. Send a simulation request
 ### Website
 ## 2. Run the simulation on EC2
+Once an EC2 instance started, the scheduled script is run to get the latest code and configuration to run
+
+
+<p align="center"><img src="./images/boot-script.png" width="50%" alt="mail_content"/></p>
+
+Then it starts pulling a new message from the given SQS url to get simulation parameters and running 02 simulations with and without the Contact Tracing System (CTS) to evaluate the efficiency of CTS. After successfully processed a message, we deleted it from the SQS queue.
+
+<p align="center"><img src="./images/jobs-pulling.png" width="50%" alt="mail_content"/></p>
+
+
 ### Contact Tracing
 ## 3. Send results to the clients via email
 
@@ -24,5 +34,5 @@ The images that are going to present to the client will be upload to the S3 buck
 
 The final result will be sent to the client's mailbox by AWS SES right after the simulation finish. However, the SES service is mainly used for sending the text, even though we can use base 64 to encode the pictures to put in inline in HTML, in most web email browser, it does not support presenting the image in this way. So we eventually use the link of file on the S3 bucket. In this case, the client is allowed to download the picture but cannot access the bucket from the mail.
 
-<p align="center"><img src="./images/email_1.png" width="70%" height="70%" alt="mail_content"/></p>
-<p align="center"><img src="./images/email_2.png" width="70%" height="70%" alt="mail_content"/></p>
+<p align="center"><img src="./images/email1.png" width="50%" alt="mail_content"/></p>
+<p align="center"><img src="./images/email2.png" width="50%" alt="mail_content"/></p>
