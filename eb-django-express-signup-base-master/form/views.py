@@ -9,5 +9,5 @@ def home(request):
 
 def signup(request):
     leads = Leads()
-    status = leads.insert_lead(request.POST['MessageGroupId'], request.POST['id'], request.POST['pop_size'], request.POST['lockdownFlag'])
+    status = leads.insert_lead(request.POST['MessageGroupId'], request.POST['email'], request.POST['pop_size'], request.POST['contactTraceFlag'])
     return HttpResponse('', status=status)
