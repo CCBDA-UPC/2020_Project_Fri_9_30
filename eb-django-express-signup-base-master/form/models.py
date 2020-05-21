@@ -2,7 +2,6 @@ from django.db import models
 import boto3
 import os
 import logging
-import numpy as np
 
 
 SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL')
@@ -18,7 +17,8 @@ class Leads(models.Model):
                     mean_number_of_transmission_events_per_hour,
                     app_installed_probability, contact_tracing_compliance):
         # mean_number_of_transmission_events_per_hour,
-        userID = str(np.random.randint(1,1000))
+        userID = 'simulation'
+        # userID = str(np.random.randint(1,1000))
         sqs = boto3.client('sqs', region_name='eu-west-1')
 
         response = sqs.send_message(
