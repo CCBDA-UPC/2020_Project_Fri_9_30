@@ -29,7 +29,35 @@ from ses import sent
 # set seed for reproducibility
 # np.random.seed(100)
 
+def differences_calculation(sim1, sim2):
+    messages = "\nBy using Contact Tracing System: \n"
+    if len(sim2.population[sim2.population[:, 6] == 3]) < len(sim1.population[sim1.population[:, 6] == 3]):
+        messages += "\nThe number of deaths decreases by: " + \
+                    str(round(((len(sim1.population[sim1.population[:, 6] == 3]) - len(
+                        sim2.population[sim2.population[:, 6] == 3]))
+                               / (len(sim1.population[sim1.population[:, 6] == 3])+1) * 100), 2)) + "%"
+    else:
+        messages += "\nThe number of deaths increases by: " + \
+                    str(round(((len(sim2.population[sim2.population[:, 6] == 3]) - len(
+                        sim1.population[sim1.population[:, 6] == 3]))
+                               / (len(sim1.population[sim1.population[:, 6] == 3])+1) * 100), 2)) + "%"
+
+    if len(sim2.population[sim2.population[:, 6] == 3]) < len(sim1.population[sim1.population[:, 6] == 3]):
+        messages += "\nThe number of infected people decreases by: " + \
+                    str(round(((len(sim1.population[sim1.population[:, 6] == 1]) - len(
+                        sim2.population[sim2.population[:, 6] == 1])+1)
+                               / (len(sim1.population[sim1.population[:, 6] == 1])+1) * 100), 2)) + "%"
+    else:
+        messages += "\nThe number of infected people increases by: " + \
+                    str(round(((len(sim2.population[sim2.population[:, 6] == 1]) - len(
+                        sim1.population[sim1.population[:, 6] == 1]))
+                               / (len(sim1.population[sim1.population[:, 6] == 1])+1) * 100), 2)) + "%"
+
+    return messages
+
 def send_results(sim1, sim2):
+    messages = differences_calculation(sim1,sim2)
+
     client = boto3.client('s3', region_name='eu-west-1')
     # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
 
@@ -80,7 +108,7 @@ def send_results(sim1, sim2):
     client.upload_file('result/contact-tracing.png', 'simulationresult2', contacttracing)
 
     # ---------- Send an email ----------- #
-    sent(noContactTracing, contacttracing, sim1.Config.pop_size, str(sim1.Config.contact_tracing), sim1.Config.email)
+    sent(noContactTracing, contacttracing, sim1.Config.pop_size, str(sim1.Config.contact_tracing), sim1.Config.email, messages)
 
 class Simulation():
 
@@ -267,13 +295,13 @@ def run_locally():
     # Config
     config1 = Configuration()
     config1.contact_tracing = False
-    config1.pop_size = 1000
+    config1.pop_size = 2000
     config1.email = "hungnm.vnu@gmail.com"
 
     config2 = Configuration()
     config2.contact_tracing = True
-    config2.set_contact_tracing(amt_has_app=1, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
-    config2.pop_size = 1000
+    config2.set_contact_tracing(amt_has_app=0, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
+    config2.pop_size = 2000
     config2.email = "hungnm.vnu@gmail.com"
 
     # initialize
@@ -281,9 +309,8 @@ def run_locally():
     sim2 = Simulation(config2)
 
     # Run
-    sim1.run()
     sim2.run()
-
+    sim1.run()
 
     # Send emails
     send_results(sim1, sim2)

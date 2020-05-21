@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 
 
 # file:statistic, file2:contacttracing
-def sent(file, file2, population, contact_tracing, email):
+def sent(file, file2, population, contact_tracing, email, messages):
     SENDER = "Alice <yuhsuanchen.alice@gmail.com>"
 
     RECIPIENT = email
@@ -118,7 +118,7 @@ def sent(file, file2, population, contact_tracing, email):
 <br/>Simulated population:{pop_size}
 <br/>Contact Tracing System:{contact_tracing}
 <br/>Parameter:OOO
-<br/>Parameter:OOO
+<br/>{messages}
 </span></p>
 </div>
 </div>
@@ -149,7 +149,7 @@ def sent(file, file2, population, contact_tracing, email):
 
 <div style="color:#27466c;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:15px;padding-right:50px;padding-bottom:55px;padding-left:20px;">
 <div style="font-size: 14px; line-height: 1.2; color: #27466c; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 17px;">
-<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="http://www.example.com/" rel="noopener" style="text-decoration: none; color: #27466c;" target="_blank"><span style="font-size: 20px;"><strong>Statistic graph</strong></span></a></p>
+<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="http://www.example.com/" rel="noopener" style="text-decoration: none; color: #27466c;" target="_blank"><span style="font-size: 20px;"><strong>Simulation without Contact Tracing System</strong></span></a></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
@@ -174,7 +174,7 @@ def sent(file, file2, population, contact_tracing, email):
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 20px; padding-top: 15px; padding-bottom: 55px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
 <div style="color:#27466c;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:15px;padding-right:0px;padding-bottom:55px;padding-left:20px;">
 <div style="font-size: 14px; line-height: 1.2; color: #27466c; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 17px;">
-<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="http://www.example.com/" rel="noopener" style="text-decoration: none; color: #27466c;" target="_blank"><span style="font-size: 20px;"><strong>Contact tracing</strong></span></a></p>
+<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="http://www.example.com/" rel="noopener" style="text-decoration: none; color: #27466c;" target="_blank"><span style="font-size: 20px;"><strong>Simulation with Contact Tracing System</strong></span></a></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
@@ -253,7 +253,7 @@ def sent(file, file2, population, contact_tracing, email):
 </table>
 </body>
     </html>
-    """.format(statistic=file, contacttracing=file2, pop_size=population, contact_tracing=contact_tracing)
+    """.format(statistic=file, contacttracing=file2, pop_size=population, contact_tracing=contact_tracing, messages=messages)
 
     # The character encoding for the email.
     CHARSET = "UTF-8"
