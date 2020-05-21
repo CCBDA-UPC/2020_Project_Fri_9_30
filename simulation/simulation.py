@@ -29,7 +29,58 @@ from ses import sent
 # set seed for reproducibility
 # np.random.seed(100)
 
+def send_results(sim1, sim2):
+    client = boto3.client('s3', region_name='eu-west-1')
+    # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
 
+    # ---------- Plot a graph for the simulation without contact tracing ----------- #
+    TESTDATA = StringIO("""Day;healthy;infected;immune;in treatment;dead
+        %s
+        """ % sim1.log)
+    df = pd.read_csv(TESTDATA, sep=";")
+    print(df)
+
+    ax = plt.gca()
+    df.plot(kind='line', x='Day', y='healthy', color='orange', ax=ax)
+    df.plot(kind='line', x='Day', y='infected', color='lightcoral', ax=ax)
+    df.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax)
+    df.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax)
+    df.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax)
+
+    plt.savefig('result/no-contact-tracing.png')  # simulation result
+
+    plt.clf()
+    plt.cla()
+    plt.close()
+
+    # ---------- Plot a graph for the simulation with contact tracing ----------- #
+    TESTDATA2 = StringIO("""Day;healthy;infected;immune;in treatment;dead
+            %s
+            """ % sim2.log)
+    df2 = pd.read_csv(TESTDATA2, sep=";")
+    print(df2)
+
+    ax2 = plt.gca()
+    df2.plot(kind='line', x='Day', y='healthy', color='orange', ax=ax2)
+    df2.plot(kind='line', x='Day', y='infected', color='lightcoral', ax=ax2)
+    df2.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax2)
+    df2.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax2)
+    df2.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax2)
+
+    plt.savefig('result/contact-tracing.png')  # simulation result
+
+    # ---------- Upload images ----------- #
+
+    ts = datetime.datetime.now().timestamp()
+
+    noContactTracing = 'no-contact-tracing-' + str(ts) + '.png'
+    contacttracing = 'contact-tracing-' + str(ts) + '.png'
+
+    client.upload_file('result/no-contact-tracing.png', 'simulationresult2', noContactTracing)
+    client.upload_file('result/contact-tracing.png', 'simulationresult2', contacttracing)
+
+    # ---------- Send an email ----------- #
+    sent(noContactTracing, contacttracing, sim1.Config.pop_size, str(sim1.Config.contact_tracing), sim1.Config.email)
 
 class Simulation():
 
@@ -177,33 +228,7 @@ class Simulation():
             self.population[0][8] = 50
             self.population[0][10] = 1
 
-    def send_results(self):
-        # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
-        TESTDATA = StringIO("""Day;healthy;infected;immune;in treatment;dead
-            %s
-            """ % self.log)
-        df = pd.read_csv(TESTDATA, sep=";")
-        print(df)
-
-        ax = plt.gca()
-        df.plot(kind='line', x='Day', y='healthy', color='orange', ax=ax)
-        df.plot(kind='line', x='Day', y='infected', color='lightcoral', ax=ax)
-        df.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax)
-        df.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax)
-        df.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax)
-
-        plt.savefig('result/resultToClient.png')  # simulation result
-
-
-        client = boto3.client('s3', region_name='eu-west-1')
-
-        ts = datetime.datetime.now().timestamp()
-        statisticgraph = 'statisticgraph' + str(ts) + '.png'
-        contacttracing = 'contacttracing' + str(ts) + '.gif'
-        client.upload_file('result/resultToClient.png', 'simulationresult2', statisticgraph)
-        client.upload_file('result/simulation.gif', 'simulationresult2', contacttracing)
-
-        sent(statisticgraph, contacttracing, self.Config.pop_size, str(self.Config.lockdown))  # pass all the variable that will be in the mail
+      # pass all the variable that will be in the mail
 
     def run(self):
         '''run simulation'''
@@ -238,33 +263,27 @@ class Simulation():
                                                            (self.population[:, 6] == 4)]))
         print('total unaffected: %i' % len(self.population[self.population[:, 6] == 0]))
 
-        self.send_results()  # send results via email to clients
-
-
 def run_locally():
     # initialize
-    sim = Simulation()
+    sim1 = Simulation()
+    sim2 = Simulation()
 
-    sim.Config.pop_size = 1000
+    # pop_size
+    sim1.Config.pop_size = 1000
+    sim2.Config.pop_size = 1000
 
-    # set number of simulation steps
-    sim.Config.simulation_steps = 50
+    # contact tracing
+    sim1.Config.contact_tracing = True
+    sim2.Config.contact_tracing = True
 
-    # set reduced interaction
-    # sim.Config.set_reduced_interaction()
-    # sim.population_init()
+    # email
+    sim1.Config.email = "hungnm.vnu@gmail.com"
+    sim2.Config.email = "hungnm.vnu@gmail.com"
 
-    # set lockdown scenario
-    # sim.Config.set_lockdown(lockdown_percentage = 0.1, lockdown_compliance = 0.95)
+    sim1.run()
+    sim2.run()
 
-    # set self-isolation scenario
-    # sim.Config.set_self_isolation(self_isolate_proportion = 0.9,
-    #                              isolation_bounds = [0.02, 0.02, 0.09, 0.98],
-    #                              traveling_infects=False)
-    # sim.population_init() #reinitialize population to enforce new roaming bounds
-
-    sim.run()
-
+    send_results(sim1, sim2)
 
 def pull_jobs():
     sqs = boto3.client('sqs', region_name='eu-west-1')
@@ -292,9 +311,12 @@ def pull_jobs():
 
             # initialize
             sim = Simulation()
+            sim2 = Simulation()
 
+
+            sim.Config.email = parameters['email']['StringValue']
             sim.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
-            sim.Config.simulation_steps = 10  # set number of simulation steps
+            # sim.Config.simulation_steps = 10  # set number of simulation steps
 
             # set reduced interaction
             # sim.Config.set_reduced_interaction()

@@ -3,10 +3,10 @@ from botocore.exceptions import ClientError
 
 
 # file:statistic, file2:contacttracing
-def sent(file, file2, population, lockdown):
+def sent(file, file2, population, contact_tracing, email):
     SENDER = "Alice <yuhsuanchen.alice@gmail.com>"
 
-    RECIPIENT = "kana860512@gmail.com"
+    RECIPIENT = email
 
     AWS_REGION = "eu-west-1"
 
@@ -116,7 +116,7 @@ def sent(file, file2, population, lockdown):
 <div style="font-size: 14px; line-height: 1.5; color: #27466c; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 21px;">
 <p style="font-size: 16px; line-height: 1.5; word-break: break-word; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px;">Here is the simulation report based on the parameter that you provide.
 <br/>Simulated population:{pop_size}
-<br/>Implement lock down:{lockdown}
+<br/>Contact Tracing System:{contact_tracing}
 <br/>Parameter:OOO
 <br/>Parameter:OOO
 </span></p>
@@ -253,7 +253,7 @@ def sent(file, file2, population, lockdown):
 </table>
 </body>
     </html>
-    """.format(statistic=file, contacttracing=file2, pop_size=population, lockdown=lockdown)
+    """.format(statistic=file, contacttracing=file2, pop_size=population, contact_tracing=contact_tracing)
 
     # The character encoding for the email.
     CHARSET = "UTF-8"

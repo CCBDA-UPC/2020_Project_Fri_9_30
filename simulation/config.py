@@ -88,8 +88,9 @@ class Configuration():
         #lockdown variables
         self.lockdown_percentage = 0.1 
         self.lockdown_vector = []
-        
-        
+
+        self.email = ""
+        self.contact_tracing = True
     def get_palette(self):
         '''returns appropriate color palette
 
