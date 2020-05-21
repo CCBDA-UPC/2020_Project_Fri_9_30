@@ -170,11 +170,11 @@ class Simulation():
 
         # find new infections
         self.population, self.destinations = infect(self.population, self.Config, self.frame,
-                                                    send_to_location=self.Config.self_isolate,
-                                                    location_bounds=self.Config.isolation_bounds,
-                                                    destinations=self.destinations,
-                                                    location_no=1,
-                                                    location_odds=self.Config.self_isolate_proportion)
+                                                    send_to_location = self.Config.self_isolate | self.Config.contact_tracing,
+                                                    location_bounds = self.Config.isolation_bounds,
+                                                    destinations = self.destinations,
+                                                    location_no = 1,
+                                                    location_odds = max(self.Config.self_isolate_proportion, self.Config.amtHasApp))
 
         # recover and die
         self.population = recover_or_die(self.population, self.frame, self.Config)
@@ -282,6 +282,9 @@ def run_locally():
     # Run
     sim1.run()
     sim2.run()
+
+    # set contact tracing scenario
+    # sim1.Config.set_contact_tracing(amt_has_app=1, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
 
     # Send emails
     send_results(sim1, sim2)

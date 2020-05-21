@@ -40,27 +40,29 @@ def find_nearby(population, infection_zone, traveling_infects=False,
         return indices
 
     elif kind.lower() == 'infected':
-        if traveling_infects:
-            infected_number = len(infected_previous_step[:,6][(infection_zone[0] < infected_previous_step[:,1]) & 
-                                                            (infected_previous_step[:,1] < infection_zone[2]) &
-                                                            (infection_zone[1] < infected_previous_step [:,2]) & 
-                                                            (infected_previous_step[:,2] < infection_zone[3]) &
-                                                            (infected_previous_step[:,6] == 1)])
+        if infected_previous_step:
+            if traveling_infects:
+                new_var = (infection_zone[0] < infected_previous_step[:, 1]) & \
+                          (infected_previous_step[:, 1] < infection_zone[2]) & \
+                          (infection_zone[1] < infected_previous_step[:, 2]) & \
+                          (infected_previous_step[:, 2] < infection_zone[3]) & \
+                          (infected_previous_step[:, 6] == 1)
+                infected_number = len(infected_previous_step[:, 6][new_var])
+            else:
+                new_var = (infection_zone[0] < infected_previous_step[:, 1]) & (
+                            infected_previous_step[:, 1] < infection_zone[2]) & \
+                          (infection_zone[1] < infected_previous_step[:, 2]) & \
+                          (infected_previous_step[:, 2] < infection_zone[3]) & \
+                          (infected_previous_step[:, 6] == 1) & \
+                          (infected_previous_step[:, 11] == 0)
+                infected_number = len(infected_previous_step[:, 6][new_var])
+            return infected_number
         else:
-            infected_number = len(infected_previous_step[:,6][(infection_zone[0] < infected_previous_step[:,1]) & 
-                                                            (infected_previous_step[:,1] < infection_zone[2]) &
-                                                            (infection_zone[1] < infected_previous_step [:,2]) & 
-                                                            (infected_previous_step[:,2] < infection_zone[3]) &
-                                                            (infected_previous_step[:,6] == 1) &
-                                                            (infected_previous_step[:,11] == 0)])
-        return infected_number
-        
+            return 0
+
     else:
         raise ValueError('type to find %s not understood! Must be either \'healthy\' or \'ill\'')
         
-        
-
-
 
 def infect(population, Config, frame, send_to_location=False, 
            location_bounds=[], destinations=[], location_no=1, 
@@ -125,6 +127,23 @@ def infect(population, Config, frame, send_to_location=False,
     #if less than half are infected, slice based on infected (to speed up computation)
     if len(infected_previous_step) < (Config.pop_size // 2):
         for patient in infected_previous_step:
+            # wait for sympomatic period to put patients in isolation
+            if frame - patient[8] >= Config.symptomatic_stage_duration:
+                if len(population[population[:, 10] == 1]) <= Config.healthcare_capacity:
+                    patient[10] = 1
+                    if send_to_location | Config.contact_tracing:
+                        # send to location if die roll is positive
+                        if np.random.uniform() <= location_odds:
+                            population[np.int32(patient[0])], \
+                            destinations[np.int32(patient[0])] = go_to_location(population[np.int32(patient[0])],
+                                                                                destinations[
+                                                                                    np.int32(patient[0])],
+                                                                                location_bounds,
+                                                                                dest_no=location_no)
+
+                else:
+                    pass
+
             #define infection zone for patient
             infection_zone = [patient[1] - Config.infection_range, patient[2] - Config.infection_range,
                                 patient[1] + Config.infection_range, patient[2] + Config.infection_range]
@@ -140,25 +159,13 @@ def infect(population, Config, frame, send_to_location=False,
                 if np.random.random() < Config.infection_chance:
                     population[idx][6] = 1
                     population[idx][8] = frame
-                    if len(population[population[:,10] == 1]) <= Config.healthcare_capacity:
-                        population[idx][10] = 1
-                        if send_to_location:
-                            #send to location if die roll is positive
-                            if np.random.uniform() <= location_odds:
-                                population[idx],\
-                                destinations[idx] = go_to_location(population[idx],
-                                                                   destinations[idx],
-                                                                   location_bounds, 
-                                                                   dest_no=location_no)
-                        else:
-                            pass
+
                     new_infections.append(idx)
 
     else:
         #if more than half are infected slice based in healthy people (to speed up computation)
-            
-        
-        
+
+
         for person in healthy_previous_step:
             #define infecftion range around healthy person
             infection_zone = [person[1] - Config.infection_range, person[2] - Config.infection_range,
@@ -177,21 +184,30 @@ def infect(population, Config, frame, send_to_location=False,
                                          infected_previous_step = infected_previous_step)
                 
                 if poplen > 0:
+                    if Config.contact_tracing:
+                        # not all people will follow the App indication
+                        if np.random.random() < Config.EFFICIENCY * Config.amtHasApp:
+                            # set complying people to quarantine
+                            population[np.int32(person[0])][15] = 1
+                            population[np.int32(person[0])][5] = 0
+                            population[np.int32(person[0])][16] = frame
+                        else:
+                            pass
+
                     if np.random.random() < (Config.infection_chance * poplen):
                         #roll die to see if healthy person will be infected
                         population[np.int32(person[0])][6] = 1
                         population[np.int32(person[0])][8] = frame
                         if len(population[population[:,10] == 1]) <= Config.healthcare_capacity:
                             population[np.int32(person[0])][10] = 1
-                            if send_to_location:
+                            if send_to_location | Config.contact_tracing:
                                 #send to location and add to treatment if die roll is positive
                                 if np.random.uniform() < location_odds:
                                     population[np.int32(person[0])],\
                                     destinations[np.int32(person[0])] = go_to_location(population[np.int32(person[0])],
                                                                                         destinations[np.int32(person[0])],
-                                                                                        location_bounds, 
+                                                                                        location_bounds,
                                                                                         dest_no=location_no)
-
 
                         new_infections.append(np.int32(person[0]))
 
@@ -251,6 +267,22 @@ def recover_or_die(population, frame, Config):
         whether to report to terminal the recoveries and deaths for each simulation step
     '''
 
+    # if quarantine >= 14 days, mark as healthy & can move (contact tracing)
+    if Config.contact_tracing:
+        quarantined_people = population[population[:, 15] == 1]
+        for people in quarantined_people:
+            quarantine_duration = frame - people[16]
+            if quarantine_duration >= Config.incubation_stage_duration:
+                if people[6] == 1:
+                    if np.random.random() >= (1 - Config.mortality_chance):
+                        people[6] = 2
+                        people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
+                    else:
+                        pass
+                if people[6] == 0:
+                    people[6] = 2
+                    people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
+
     #find infected people
     infected_people = population[population[:,6] == 1]
 
@@ -296,6 +328,10 @@ def recover_or_die(population, frame, Config):
             infected_people[:,6][infected_people[:,0] == idx] = 2
             infected_people[:,10][infected_people[:,0] == idx] = 0
             recovered.append(np.int32(infected_people[infected_people[:,0] == idx][:,0][0]))
+            if Config.contact_tracing:
+                # recoverd-quarantined can now move
+                if infected_people[:, 15][infected_people[:, 0] == idx] == 1:
+                    infected_people[:, 5][infected_people[:, 0] == idx] = np.random.normal(loc=0.01, scale=0.01 / 3)
 
     if len(fatalities) > 0 and Config.verbose:
         print('\nat timestep %i these people died: %s' %(frame, fatalities))

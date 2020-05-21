@@ -21,11 +21,12 @@ class Configuration():
         self.endif_no_infections = True #whether to stop simulation if no infections remain
 
         #scenario flags
-        self.traveling_infects = False
+        self.traveling_infects = True
         self.self_isolate = False
         self.lockdown = False
         self.lockdown_percentage = 0.1 #after this proportion is infected, lock-down begins
-        self.lockdown_compliance = 0.95 #fraction of the population that will obey the lockdown        
+        self.lockdown_compliance = 0.95 #fraction of the population that will obey the lockdown
+        self.contact_tracing = False
 
         #world variables, defines where population can and cannot roam
         self.xbounds = [0.02, 0.98]
@@ -54,7 +55,13 @@ class Configuration():
         self.critical_age = 75 #age at and beyond which mortality risk reaches maximum
         self.critical_mortality_chance = 0.1 #maximum mortality risk for older age
         self.risk_increase = 'quadratic' #whether risk between risk and critical age increases 'linear' or 'quadratic'
-        
+
+        # contact tracing
+        self.amtHasApp = 1  # percent people having the App
+        self.EFFICIENCY = 1  # a portion of those who receive the alarm comply to go quarantine
+        self.symptomatic_stage_duration = 48  # delay from symptoms to alarm
+        self.incubation_stage_duration = 336  # quarantine period
+
         #movement variables
         #mean_speed = 0.01 # the mean speed (defined as heading * speed)
         #std_speed = 0.01 / 3 #the standard deviation of the speed parameter
@@ -171,5 +178,25 @@ class Configuration():
         '''sets reduced interaction scenario to active'''
 
         self.speed = speed
+
+    def set_contact_tracing(self, amt_has_app, EFFICIENCY,
+                            symptomatic_stage_duration, incubation_stage_duration,
+                            isolation_bounds=[0.02, 0.02, 0.09, 0.98]):
+        '''sets contact tracing to active'''
+
+        self.contact_tracing = True
+        self.symptomatic_stage_duration = symptomatic_stage_duration
+        self.incubation_stage_duration = incubation_stage_duration
+
+        #fraction of the population that will obey the lockdown
+        self.amtHasApp = amt_has_app
+        self.EFFICIENCY = EFFICIENCY
+        # self.contact_tracing_vector = np.zeros((self.pop_size,))
+        #contact tracing vector is 1 for those not complying
+        # self.contact_tracing_vector[np.random.uniform(size=(self.pop_size,)) >= (1-EFFICIENCY)] = 1
+        self.isolation_bounds = isolation_bounds
+        # set roaming bounds to outside isolated area
+        self.xbounds = [0.1, 1.1]
+        self.ybounds = [0.02, 0.98]
 
 
