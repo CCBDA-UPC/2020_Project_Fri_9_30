@@ -2,6 +2,7 @@ from django.db import models
 import boto3
 import os
 import logging
+import numpy as np
 
 
 SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL')
@@ -11,18 +12,19 @@ logger = logging.getLogger(__name__)
 
 class Leads(models.Model):
 
-    def insert_lead(self, MessageGroupId, email,
+    def insert_lead(self, email,
                     pop_size, incubation_stage_duration, symptomatic_stage_duration,
-                    min_recovery_duration, max_recovery_duration, mortality_prob,
-                    healthcare_capacity,
-                    amt_has_app, efficiency):
+                    min_fighting_duration, max_fighting_duration, mortality_probability,
+                    mean_number_of_transmission_events_per_hour,
+                    app_installed_probability, contact_tracing_compliance):
         # mean_number_of_transmission_events_per_hour,
+        userID = str(np.random.randint(1,1000))
         sqs = boto3.client('sqs', region_name='eu-west-1')
 
         response = sqs.send_message(
             QueueUrl=SQS_QUEUE_URL,
-            MessageGroupId=MessageGroupId,
-            MessageDeduplicationId=MessageGroupId,
+            MessageGroupId=userID,
+            MessageDeduplicationId=userID,
             MessageAttributes={
                 'email': {
                     'DataType': 'String',
@@ -40,33 +42,29 @@ class Leads(models.Model):
                     'DataType': 'Number',
                     'StringValue': symptomatic_stage_duration
                 },
-                'min_recovery_duration': {
+                'min_fighting_duration': {
                     'DataType': 'Number',
-                    'StringValue': min_recovery_duration
+                    'StringValue': min_fighting_duration
                 },
-                'max_recovery_duration': {
+                'max_fighting_duration': {
                     'DataType': 'Number',
-                    'StringValue': max_recovery_duration
+                    'StringValue': max_fighting_duration
                 },
-                'mortality_prob': {
+                'mortality_probability': {
                     'DataType': 'Number',
-                    'StringValue': mortality_prob
+                    'StringValue': mortality_probability
                 },
-                # 'mean_number_of_transmission_events_per_hour': {
-                #     'DataType': 'Number',
-                #     'StringValue': mean_number_of_transmission_events_per_hour
-                # },
-                'healthcare_capacity': {
+                'mean_number_of_transmission_events_per_hour': {
                     'DataType': 'Number',
-                    'StringValue': healthcare_capacity
+                    'StringValue': mean_number_of_transmission_events_per_hour
                 },
-                'amt_has_app': {
+                'app_installed_probability': {
                     'DataType': 'Number',
-                    'StringValue': amt_has_app
+                    'StringValue': app_installed_probability
                 },
-                'efficiency': {
+                'contact_tracing_compliance': {
                     'DataType': 'Number',
-                    'StringValue': efficiency
+                    'StringValue': contact_tracing_compliance
                 }
             },
             MessageBody=(
