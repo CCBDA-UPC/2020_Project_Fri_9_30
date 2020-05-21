@@ -1,7 +1,10 @@
+import datetime
 import json
 import os
 import sys
 import time
+from io import StringIO
+from random import randint
 
 import boto3
 import pandas as pd
@@ -20,20 +23,24 @@ from path_planning import go_to_location, set_destination, check_at_destination,
 from population import initialize_population, initialize_destination_matrix, \
     set_destination_bounds, save_data, save_population, Population_trackers
 from visualiser import build_fig, draw_tstep, set_style
+from ses import sent
 
 
 # set seed for reproducibility
 # np.random.seed(100)
 
+
+
 class Simulation():
+
     # TODO: if lockdown or otherwise stopped: destination -1 means no motion
     def __init__(self, *args, **kwargs):
         # load default config data
         self.Config = Configuration()
         self.frame = 0
 
-        self.log = []
-        self.log.append(str(self.Config.pop_size) + "\n") #first line is the population
+        self.log = ""
+        # self.log.append(str(self.Config.pop_size) + "\n")  # first line is the population
 
         # initialize default population
         self.population_init()
@@ -43,7 +50,7 @@ class Simulation():
         # initalise destinations vector
         self.destinations = initialize_destination_matrix(self.Config.pop_size, 1)
 
-        self.fig, self.spec, self.ax1, self.ax2 = build_fig(self.Config)
+        # self.fig, self.spec, self.ax1, self.ax2 = build_fig(self.Config)
 
         # set_style(self.Config)
 
@@ -130,23 +137,23 @@ class Simulation():
         self.pop_tracker.update_counts(self.population)
 
         # visualise
-        if self.Config.visualise:
-            draw_tstep(self.Config, self.population, self.pop_tracker, self.frame,
-                       self.fig, self.spec, self.ax1, self.ax2)
+        # if self.Config.visualise:
+        #     draw_tstep(self.Config, self.population, self.pop_tracker, self.frame,
+        #                self.fig, self.spec, self.ax1, self.ax2)
 
         # report stuff to console
         # sys.stdout.write('\r')
         # sys.stdout.write('%i: healthy: %i, infected: %i, immune: %i, in treatment: %i, \
-# dead: %i, of total: %i' % (self.frame, self.pop_tracker.susceptible[-1], self.pop_tracker.infectious[-1],
-#                            self.pop_tracker.recovered[-1], len(self.population[self.population[:, 10] == 1]),
-#                            self.pop_tracker.fatalities[-1], self.Config.pop_size))
-        self.log.append(str(self.frame) + ","
-                        + str(self.pop_tracker.susceptible[-1]) + ","
-                        + str(self.pop_tracker.infectious[-1]) + ","
-                        + str(self.pop_tracker.recovered[-1]) + ","
-                        + str(len(self.population[self.population[:, 10] == 1])) + ","
-                        + str(self.pop_tracker.fatalities[-1]))
-
+        # dead: %i, of total: %i' % (self.frame, self.pop_tracker.susceptible[-1], self.pop_tracker.infectious[-1],
+        #                            self.pop_tracker.recovered[-1], len(self.population[self.population[:, 10] == 1]),
+        #                            self.pop_tracker.fatalities[-1], self.Config.pop_size))
+        self.log = self.log + (str(self.frame) + ";"
+                               + str(self.pop_tracker.susceptible[-1]) + ";"
+                               + str(self.pop_tracker.infectious[-1]) + ";"
+                               + str(self.pop_tracker.recovered[-1]) + ";"
+                               + str(len(self.population[self.population[:, 10] == 1])) + ";"
+                               + str(self.pop_tracker.fatalities[-1]) + "\n")
+        # change the log content
         # save popdata if required
         if self.Config.save_pop and (self.frame % self.Config.save_pop_freq) == 0:
             save_population(self.population, self.frame, self.Config.save_pop_folder)
@@ -155,6 +162,7 @@ class Simulation():
 
         # update frame
         self.frame += 1
+
 
     def callback(self):
         '''placeholder function that can be overwritten.
@@ -171,10 +179,31 @@ class Simulation():
 
     def send_results(self):
         # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
-        print(self.log)
+        TESTDATA = StringIO("""Day;healthy;infected;immune;in treatment;dead
+            %s
+            """ % self.log)
+        df = pd.read_csv(TESTDATA, sep=";")
+        print(df)
 
-        # TODO: Draw one graph with 5 lines for: healthy, infected, immune, in treatment, dead
-        # TODO: Send the graph to clients via emails
+        ax = plt.gca()
+        df.plot(kind='line', x='Day', y='healthy', color='orange', ax=ax)
+        df.plot(kind='line', x='Day', y='infected', color='lightcoral', ax=ax)
+        df.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax)
+        df.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax)
+        df.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax)
+
+        plt.savefig('result/resultToClient.png')  # simulation result
+
+
+        client = boto3.client('s3', region_name='eu-west-1')
+
+        ts = datetime.datetime.now().timestamp()
+        statisticgraph = 'statisticgraph' + str(ts) + '.png'
+        contacttracing = 'contacttracing' + str(ts) + '.gif'
+        client.upload_file('result/resultToClient.png', 'simulationresult2', statisticgraph)
+        client.upload_file('result/simulation.gif', 'simulationresult2', contacttracing)
+
+        sent(statisticgraph, contacttracing, self.Config.pop_size, str(self.Config.lockdown))  # pass all the variable that will be in the mail
 
     def run(self):
         '''run simulation'''
@@ -209,7 +238,8 @@ class Simulation():
                                                            (self.population[:, 6] == 4)]))
         print('total unaffected: %i' % len(self.population[self.population[:, 6] == 0]))
 
-        self.send_results() ## send results via email to clients
+        self.send_results()  # send results via email to clients
+
 
 def run_locally():
     # initialize
@@ -234,6 +264,7 @@ def run_locally():
     # sim.population_init() #reinitialize population to enforce new roaming bounds
 
     sim.run()
+
 
 def pull_jobs():
     sqs = boto3.client('sqs', region_name='eu-west-1')
@@ -262,9 +293,8 @@ def pull_jobs():
             # initialize
             sim = Simulation()
 
-            sim.Config.pop_size = int(parameters['pop_size']['StringValue']) # Set population size
-            sim.Config.simulation_steps = 10 # set number of simulation steps
-
+            sim.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
+            sim.Config.simulation_steps = 10  # set number of simulation steps
 
             # set reduced interaction
             # sim.Config.set_reduced_interaction()
@@ -284,8 +314,9 @@ def pull_jobs():
         except Exception as e:
             print(e)
             print("No available jobs")
-            time.sleep(30) ## Check jobs every 30 secs
+            time.sleep(30)  ## Check jobs every 30 secs
+
 
 if __name__ == '__main__':
-    # run_locally() ## test simulation locally
-    pull_jobs() ## start pulling jobs
+    run_locally()  ## test simulation locally
+# pull_jobs() ## start pulling jobs
