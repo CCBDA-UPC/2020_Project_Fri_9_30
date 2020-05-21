@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Leads(models.Model):
 
-    def insert_lead(self, MessageGroupId, email, pop_size, contactTraceFlag):
+    def insert_lead(self, MessageGroupId, id, pop_size, lockdownFlag):
 
         sqs = boto3.client('sqs', region_name='eu-west-1')
 
@@ -20,17 +20,17 @@ class Leads(models.Model):
             MessageGroupId=MessageGroupId,
             MessageDeduplicationId=MessageGroupId,
             MessageAttributes={
-                'email': {
-                    'DataType': 'String',
-                    'StringValue': email
+                'id': {
+                    'DataType': 'Number',
+                    'StringValue': id
                 },
                 'pop_size': {
                     'DataType': 'Number',
                     'StringValue': pop_size
                 } ,
-                'contactTraceFlag': {
+                'lockdownFlag': {
                     'DataType': 'String',
-                    'StringValue': contactTraceFlag
+                    'StringValue': lockdownFlag
                 }
             },
             MessageBody=(
