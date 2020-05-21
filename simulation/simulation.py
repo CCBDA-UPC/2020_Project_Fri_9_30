@@ -202,7 +202,7 @@ class Simulation():
                                                     location_bounds = self.Config.isolation_bounds,
                                                     destinations = self.destinations,
                                                     location_no = 1,
-                                                    location_odds = max(self.Config.self_isolate_proportion, self.Config.amtHasApp))
+                                                    location_odds = max(self.Config.self_isolate_proportion, self.Config.app_installed_probability))
 
         # recover and die
         self.population = recover_or_die(self.population, self.frame, self.Config)
@@ -300,7 +300,7 @@ def run_locally():
 
     config2 = Configuration()
     config2.contact_tracing = True
-    config2.set_contact_tracing(amt_has_app=0, EFFICIENCY=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
+    config2.set_contact_tracing(app_installed_probability=0, contact_tracing_compliance=1, symptomatic_stage_duration=48, incubation_stage_duration=336)
     config2.pop_size = 2000
     config2.email = "hungnm.vnu@gmail.com"
 

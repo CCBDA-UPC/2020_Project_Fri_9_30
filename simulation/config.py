@@ -57,8 +57,8 @@ class Configuration():
         self.risk_increase = 'quadratic' #whether risk between risk and critical age increases 'linear' or 'quadratic'
 
         # contact tracing
-        self.amtHasApp = 1  # percent people having the App
-        self.EFFICIENCY = 1  # a portion of those who receive the alarm comply to go quarantine
+        self.app_installed_probability = 1  # percent people having the App
+        self.contact_tracing_compliance = 1  # a portion of those who receive the alarm comply to go quarantine
         self.symptomatic_stage_duration = 48  # delay from symptoms to alarm
         self.incubation_stage_duration = 336  # quarantine period
 
@@ -78,8 +78,8 @@ class Configuration():
         #infection variables
         self.infection_range=0.01 #range surrounding sick patient that infections can take place
         self.infection_chance=0.03   #chance that an infection spreads to nearby healthy people each tick
-        self.recovery_duration=(200, 500) #how many ticks it may take to recover from the illness
-        self.mortality_chance=0.02 #global baseline chance of dying from the disease
+        self.fighting_duration=(200, 500) #how many ticks it may take to recover from the illness
+        self.mortality_probability=0.02 #global baseline chance of dying from the disease
 
         #healthcare variables
         self.healthcare_capacity = 300 #capacity of the healthcare system
@@ -179,7 +179,7 @@ class Configuration():
 
         self.speed = speed
 
-    def set_contact_tracing(self, amt_has_app, EFFICIENCY,
+    def set_contact_tracing(self, app_installed_probability, contact_tracing_compliance,
                             symptomatic_stage_duration, incubation_stage_duration,
                             isolation_bounds=[0.02, 0.02, 0.09, 0.98]):
         '''sets contact tracing to active'''
@@ -189,8 +189,8 @@ class Configuration():
         self.incubation_stage_duration = incubation_stage_duration
 
         #fraction of the population that will obey the lockdown
-        self.amtHasApp = amt_has_app
-        self.EFFICIENCY = EFFICIENCY
+        self.app_installed_probability = app_installed_probability
+        self.contact_tracing_compliance = contact_tracing_compliance
         # self.contact_tracing_vector = np.zeros((self.pop_size,))
         #contact tracing vector is 1 for those not complying
         # self.contact_tracing_vector[np.random.uniform(size=(self.pop_size,)) >= (1-EFFICIENCY)] = 1
