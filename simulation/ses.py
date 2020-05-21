@@ -154,7 +154,7 @@ def sent(file, file2, population, contact_tracing, email):
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
 <div align="center" class="img-container center autowidth" style="padding-right: 0px;padding-left: 0px;">
-<img src = "https://simulationresult2.s3.eu-west-1.amazonaws.com/{statistic}" alt = "result" style = "width:70%" >
+<img src = "https://simulationresult2.s3.eu-west-1.amazonaws.com/{statistic}" alt = "result" style = "width:100%" >
 </div>
 <table border="0" cellpadding="0" cellspacing="0" class="divider" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top" width="100%">
 <tbody>

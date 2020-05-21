@@ -85,9 +85,9 @@ def send_results(sim1, sim2):
 class Simulation():
 
     # TODO: if lockdown or otherwise stopped: destination -1 means no motion
-    def __init__(self, *args, **kwargs):
+    def __init__(self, config):
         # load default config data
-        self.Config = Configuration()
+        self.Config = config
         self.frame = 0
 
         self.log = ""
@@ -264,25 +264,26 @@ class Simulation():
         print('total unaffected: %i' % len(self.population[self.population[:, 6] == 0]))
 
 def run_locally():
+    # Config
+    config1 = Configuration()
+    config1.contact_tracing = False
+    config1.pop_size = 1500
+    config1.email = "hungnm.vnu@gmail.com"
+
+    config2 = Configuration()
+    config2.contact_tracing = True
+    config2.pop_size = 1500
+    config2.email = "hungnm.vnu@gmail.com"
+
     # initialize
-    sim1 = Simulation()
-    sim2 = Simulation()
+    sim1 = Simulation(config1)
+    sim2 = Simulation(config2)
 
-    # pop_size
-    sim1.Config.pop_size = 1000
-    sim2.Config.pop_size = 1000
-
-    # contact tracing
-    sim1.Config.contact_tracing = True
-    sim2.Config.contact_tracing = True
-
-    # email
-    sim1.Config.email = "hungnm.vnu@gmail.com"
-    sim2.Config.email = "hungnm.vnu@gmail.com"
-
+    # Run
     sim1.run()
     sim2.run()
 
+    # Send emails
     send_results(sim1, sim2)
 
 def pull_jobs():
@@ -309,25 +310,32 @@ def pull_jobs():
             parameters = message['MessageAttributes']
             print(parameters)
 
+            # Config
+            config1 = Configuration()
+            # config1.contact_tracing = False
+            config1.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
+            config1.email = parameters['email']['StringValue']  # Set email
+
+            config2 = Configuration()
+            # config2.contact_tracing = True
+            config2.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
+            config2.email = parameters['email']['StringValue']  # Set email
+
             # initialize
-            sim1 = Simulation()
-            sim2 = Simulation()
+            sim1 = Simulation(config1)
+            sim2 = Simulation(config2)
 
-            sim1.Config.email = parameters['email']['StringValue']
-            sim2.Config.email = parameters['email']['StringValue']
-
-            sim1.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
-            sim2.Config.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
-
+            # Run
             sim1.run()
             sim2.run()
 
+            # Send emails
             send_results(sim1, sim2)
 
         except Exception as e:
             print(e)
-            print("No available jobs")
-            time.sleep(30)  ## Check jobs every 30 secs
+            print("Exception occurs! => Getting a new job...")
+            time.sleep(10)  ## Check jobs every 10 secs
 
 
 if __name__ == '__main__':
