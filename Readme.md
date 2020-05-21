@@ -1,4 +1,4 @@
-# Cloud Computing Project Challenge (*Sprint 03*)
+# Cloud Computing Project Challenge (*Sprint 04*)
 
 ## Members:
 - ariston.harianto.lim@est.fib.upc.edu
@@ -24,5 +24,5 @@ The images that are going to present to the client will be upload to the S3 buck
 
 The final result will be sent to the client's mailbox by AWS SES right after the simulation finish. However, the SES service is mainly used for sending the text, even though we can use base 64 to encode the pictures to put in inline in HTML, in most web email browser, it does not support presenting the image in this way. So we eventually use the link of file on the S3 bucket. In this case, the client is allowed to download the picture but cannot access the bucket from the mail.
 
-<p align="center"><img src="./images/email_1.png" width="70%" height="70%" alt="mail_content"/></p>
-<p align="center"><img src="./images/email_2.png" width="70%" height="70%" alt="mail_content"/></p>
+<p align="center"><img src="./images/email1.png" width="50%" alt="mail_content"/></p>
+<p align="center"><img src="./images/email2.png" width="50%" alt="mail_content"/></p>
