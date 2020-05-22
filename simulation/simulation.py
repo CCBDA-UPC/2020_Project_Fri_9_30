@@ -360,8 +360,10 @@ def pull_jobs():
 
             config2 = Configuration()
             config2.contact_tracing = True
-            config2.set_contact_tracing(amt_has_app=0.9, EFFICIENCY=0.8, symptomatic_stage_duration=48,
-                                        incubation_stage_duration=336)
+            config2.set_contact_tracing(app_installed_probability=float(parameters['app_installed_probability']['StringValue']),
+                                        contact_tracing_compliance=float(parameters['contact_tracing_compliance']['StringValue']),
+                                        symptomatic_stage_duration=int(parameters['symptomatic_stage_duration']['StringValue']),
+                                        incubation_stage_duration=int(parameters['incubation_stage_duration']['StringValue']))
             config2.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
             config2.email = parameters['email']['StringValue']  # Set email
 
