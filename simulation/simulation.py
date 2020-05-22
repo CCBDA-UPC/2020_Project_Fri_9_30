@@ -226,7 +226,7 @@ class Simulation():
         self.population[:, 11][self.population[:, 6] == 2] = 0
 
         # update population statistics
-        self.pop_tracker.update_counts(self.population)
+        self.pop_tracker.update_counts(self.population, self.frame)
 
         # visualise
         # if self.Config.visualise:

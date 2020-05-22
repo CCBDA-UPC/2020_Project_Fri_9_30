@@ -218,17 +218,23 @@ class Population_trackers():
         self.infectious = []
         self.recovered = []
         self.fatalities = []
+        self.economy = []
 
         #PLACEHOLDER - whether recovered individual can be reinfected
         self.reinfect = False 
 
-    def update_counts(self, population):
+    def update_counts(self, population, frame):
         '''docstring
         '''
         pop_size = population.shape[0]
         self.infectious.append(len(population[population[:,6] == 1]))
         self.recovered.append(len(population[population[:,6] == 2]))
         self.fatalities.append(len(population[population[:,6] == 3]))
+
+        production_time_lost = 0
+        production_time_lost += np.sum(frame - population[population[:, 10] == 1][:, 8])
+        production_time_lost += np.sum(frame - population[population[:, 15] == 1][:, 16])
+        self.economy.append(production_time_lost)
 
         if self.reinfect:
             self.susceptible.append(pop_size - (self.infectious[-1] +
