@@ -123,7 +123,14 @@ def send_results(sim1, sim2):
     client.upload_file('result/contact-tracing.png', 'simulationresult2', contacttracing)
 
     # ---------- Send an email ----------- #
-    sent(noContactTracing, contacttracing, sim1.Config.pop_size, "True", sim1.Config.email, message1, message2)
+    sent(noContactTracing, contacttracing, sim1.Config.pop_size, "True",
+         sim1.Config.email, sim2.Config.app_installed_probability,sim2.Config.contact_tracing_compliance,
+         sim2.Config.symptomatic_stage_duration, sim2.Config.incubation_stage_duration,
+         sim2.Config.min_fighting_duration,
+         sim2.Config.max_fighting_duration,
+         sim2.Config.mortality_probability,
+         sim2.Config.mean_number_of_transmission_events_per_hour,
+        message1, message2)
 
 class Simulation():
 
@@ -360,13 +367,24 @@ def pull_jobs():
             config1.contact_tracing = False
             config1.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
             config1.email = parameters['email']['StringValue']  # Set email
+            config1.symptomatic_stage_duration = int(parameters['symptomatic_stage_duration']['StringValue'])
+            config1.incubation_stage_duration=int(parameters['incubation_stage_duration']['StringValue'])
+            config1.min_fighting_duration=int(parameters['min_fighting_duration']['StringValue'])
+            config1.max_fighting_duration=int(parameters['max_fighting_duration']['StringValue'])
+            config1.mortality_probability=float(parameters['mortality_probability']['StringValue'])
+            config1.mean_number_of_transmission_events_per_hour=int(parameters['mean_number_of_transmission_events_per_hour']['StringValue'])
+
 
             config2 = Configuration()
             config2.contact_tracing = True
             config2.set_contact_tracing(app_installed_probability=float(parameters['app_installed_probability']['StringValue']),
                                         contact_tracing_compliance=float(parameters['contact_tracing_compliance']['StringValue']),
                                         symptomatic_stage_duration=int(parameters['symptomatic_stage_duration']['StringValue']),
-                                        incubation_stage_duration=int(parameters['incubation_stage_duration']['StringValue']))
+                                        incubation_stage_duration=int(parameters['incubation_stage_duration']['StringValue']),
+                                        min_fighting_duration=int(parameters['min_fighting_duration']['StringValue']),
+                                        max_fighting_duration=int(parameters['max_fighting_duration']['StringValue']),
+                                        mortality_probability=float(parameters['mortality_probability']['StringValue']),
+                                        mean_number_of_transmission_events_per_hour=int(parameters['mean_number_of_transmission_events_per_hour']['StringValue']))
             config2.pop_size = int(parameters['pop_size']['StringValue'])  # Set population size
             config2.email = parameters['email']['StringValue']  # Set email
 

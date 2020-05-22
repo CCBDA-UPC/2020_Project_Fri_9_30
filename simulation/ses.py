@@ -3,7 +3,10 @@ from botocore.exceptions import ClientError
 
 
 # file:statistic, file2:contacttracing
-def sent(file, file2, population, contact_tracing, email, message1, message2):
+def sent(file, file2, population, contact_tracing, email, app_installed_probability, contact_tracing_compliance,
+        symptomatic_stage_duration,incubation_stage_duration,min_fighting_duration,max_fighting_duration,mortality_probability,
+         mean_number_of_transmission_events_per_hour,
+         message1, message2):
     SENDER = "Alice <yuhsuanchen.alice@gmail.com>"
 
     RECIPIENT = email
@@ -115,8 +118,17 @@ def sent(file, file2, population, contact_tracing, email, message1, message2):
 <div style="color:#27466c;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.5;padding-top:5px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 <div style="font-size: 14px; line-height: 1.5; color: #27466c; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 21px;">
 <p style="font-size: 16px; line-height: 1.5; word-break: break-word; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px;">Here is the simulation report based on the parameter that you provide.
-<br/>Simulated population:{pop_size}
-<br/>Contact Tracing System:{contact_tracing}
+<br/>Population size: {pop_size}
+<br/>Contact Tracing System: {contact_tracing}
+<br/>Application Installed Probability: {app_installed_probability}
+<br/>Contact Tracing Compliance: {contact_tracing_compliance}
+<br/>Duration of Symptomatic Stage: {symptomatic_stage_duration} hours
+<br/>Duration of Incubation Stage: {incubation_stage_duration} hours
+<br/>Duration of Fighting Stage: Between {min_fighting_duration} to {max_fighting_duration} hours
+<br/>Mortality Probability: {mortality_probability}
+<br/>Mean Number of Transmission Events Per Hour: {mean_number_of_transmission_events_per_hour}
+<br/>-------------------------
+<br/>SUMMARY (click ... to see more)
 <br/>{message1}
 <br/>{message2}
 </span></p>
@@ -254,6 +266,14 @@ def sent(file, file2, population, contact_tracing, email, message1, message2):
 </body>
     </html>
     """.format(statistic=file, contacttracing=file2, pop_size=population, contact_tracing=contact_tracing,
+               symptomatic_stage_duration=symptomatic_stage_duration,
+               incubation_stage_duration=incubation_stage_duration,
+               min_fighting_duration=min_fighting_duration,
+               max_fighting_duration=max_fighting_duration,
+               mortality_probability=mortality_probability,
+               mean_number_of_transmission_events_per_hour=mean_number_of_transmission_events_per_hour,
+               app_installed_probability=app_installed_probability,
+               contact_tracing_compliance=contact_tracing_compliance,
                message1=message1, message2=message2)
 
     # The character encoding for the email.

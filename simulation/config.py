@@ -181,13 +181,19 @@ class Configuration():
 
     def set_contact_tracing(self, app_installed_probability, contact_tracing_compliance,
                             symptomatic_stage_duration, incubation_stage_duration,
+                            min_fighting_duration,max_fighting_duration,
+                            mortality_probability,mean_number_of_transmission_events_per_hour,
                             isolation_bounds=[0.02, 0.02, 0.09, 0.98]):
         '''sets contact tracing to active'''
 
         self.contact_tracing = True
         self.symptomatic_stage_duration = symptomatic_stage_duration
         self.incubation_stage_duration = incubation_stage_duration
-
+        self.min_fighting_duration = min_fighting_duration
+        self.max_fighting_duration = max_fighting_duration
+        self.fighting_duration = (min_fighting_duration,max_fighting_duration)
+        self.mortality_probability = mortality_probability
+        self.mean_number_of_transmission_events_per_hour = mean_number_of_transmission_events_per_hour
         #fraction of the population that will obey the lockdown
         self.app_installed_probability = app_installed_probability
         self.contact_tracing_compliance = contact_tracing_compliance
