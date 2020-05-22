@@ -104,7 +104,7 @@ def send_results(sim1, sim2):
     df2.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax2)
     df2.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax2)
     df2.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax2)
-    df2.plot(kind='line', x='Day', y='production lost', color='red', ax=ax)
+    df2.plot(kind='line', x='Day', y='production lost', color='red', ax=ax2)
 
     plt.savefig('result/contact-tracing.png')  # simulation result
 
@@ -376,8 +376,8 @@ def pull_jobs():
             sim2 = Simulation(config2)
 
             # Run
-            sim1.run()
             sim2.run()
+            sim1.run()
 
             # Send emails
             send_results(sim1, sim2)
@@ -387,7 +387,6 @@ def pull_jobs():
             print("Exception occurs! => Getting a new job...")
             time.sleep(10)  ## Check jobs every 10 secs
 
-
 if __name__ == '__main__':
-    run_locally()  ## test simulation locally
-    # pull_jobs() ## start pulling jobs
+    # run_locally()  ## test simulation locally
+    pull_jobs() ## start pulling jobs
