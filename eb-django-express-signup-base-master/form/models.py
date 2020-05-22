@@ -2,6 +2,7 @@ from django.db import models
 import boto3
 import os
 import logging
+import time
 
 
 SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL')
@@ -17,14 +18,14 @@ class Leads(models.Model):
                     mean_number_of_transmission_events_per_hour,
                     app_installed_probability, contact_tracing_compliance):
         # mean_number_of_transmission_events_per_hour,
-        userID = 'simulation'
+        ts = str(time.time()).replace('.', '')
         # userID = str(np.random.randint(1,1000))
         sqs = boto3.client('sqs', region_name='eu-west-1')
 
         response = sqs.send_message(
             QueueUrl=SQS_QUEUE_URL,
-            MessageGroupId=userID,
-            MessageDeduplicationId=userID,
+            MessageGroupId=ts,
+            MessageDeduplicationId=ts,
             MessageAttributes={
                 'email': {
                     'DataType': 'String',
