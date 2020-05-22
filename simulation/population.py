@@ -232,8 +232,9 @@ class Population_trackers():
         self.fatalities.append(len(population[population[:,6] == 3]))
 
         production_time_lost = 0
-        production_time_lost += np.sum(frame - population[population[:, 10] == 1][:, 8])
+        production_time_lost += np.sum(frame - population[population[:, 6] == 1][:, 8])
         production_time_lost += np.sum(frame - population[population[:, 15] == 1][:, 16])
+        production_time_lost = production_time_lost/1000
         self.economy.append(production_time_lost)
 
         if self.reinfect:

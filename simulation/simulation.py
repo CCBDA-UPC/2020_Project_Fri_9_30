@@ -63,7 +63,7 @@ def send_results(sim1, sim2):
     # Log structure: dayNumber, healthy, infected, immune, in treatment, dead
 
     # ---------- Plot a graph for the simulation without contact tracing ----------- #
-    TESTDATA = StringIO("""Day;healthy;infected;immune;in treatment;dead
+    TESTDATA = StringIO("""Day;healthy;infected;immune;in treatment;dead;production lost
         %s
         """ % sim1.log)
     df = pd.read_csv(TESTDATA, sep=";")
@@ -79,6 +79,7 @@ def send_results(sim1, sim2):
     df.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax)
     df.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax)
     df.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax)
+    df.plot(kind='line', x='Day', y='production lost', color='red', ax=ax)
 
     plt.savefig('result/no-contact-tracing.png')  # simulation result
 
@@ -87,7 +88,7 @@ def send_results(sim1, sim2):
     plt.close()
 
     # ---------- Plot a graph for the simulation with contact tracing ----------- #
-    TESTDATA2 = StringIO("""Day;healthy;infected;immune;in treatment;dead
+    TESTDATA2 = StringIO("""Day;healthy;infected;immune;in treatment;dead;production lost
             %s
             """ % sim2.log)
     df2 = pd.read_csv(TESTDATA2, sep=";")
@@ -103,6 +104,7 @@ def send_results(sim1, sim2):
     df2.plot(kind='line', x='Day', y='immune', color='powderblue', ax=ax2)
     df2.plot(kind='line', x='Day', y='in treatment', color='darkseagreen', ax=ax2)
     df2.plot(kind='line', x='Day', y='dead', color='darkgrey', ax=ax2)
+    df2.plot(kind='line', x='Day', y='production lost', color='red', ax=ax)
 
     plt.savefig('result/contact-tracing.png')  # simulation result
 
@@ -244,8 +246,8 @@ class Simulation():
                                + str(self.pop_tracker.infectious[-1]) + ";"
                                + str(self.pop_tracker.recovered[-1]) + ";"
                                + str(len(self.population[self.population[:, 10] == 1])) + ";"
-                               + str(self.pop_tracker.fatalities[-1]) + "\n") + ";"\
-                   + str(self.pop_tracker.economy[-1])
+                               + str(self.pop_tracker.fatalities[-1]) + ";"
+                               + str(self.pop_tracker.economy[-1]) + "\n")
         # change the log content
         # save popdata if required
         if self.Config.save_pop and (self.frame % self.Config.save_pop_freq) == 0:
@@ -387,5 +389,5 @@ def pull_jobs():
 
 
 if __name__ == '__main__':
-    # run_locally()  ## test simulation locally
-    pull_jobs() ## start pulling jobs
+    run_locally()  ## test simulation locally
+    # pull_jobs() ## start pulling jobs
