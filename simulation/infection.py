@@ -140,7 +140,12 @@ def infect(population, Config, frame, send_to_location=False,
                                                                                     np.int32(patient[0])],
                                                                                 location_bounds,
                                                                                 dest_no=location_no)
-
+                            if population[np.int32(patient[0])][15] == 0:
+                                population[np.int32(patient[0])][15] = 1
+                                population[np.int32(patient[0])][5] = 0
+                                population[np.int32(patient[0])][16] = frame
+                            else:
+                                pass
                 else:
                     pass
 
@@ -188,9 +193,12 @@ def infect(population, Config, frame, send_to_location=False,
                         # not all people will follow the App indication
                         if np.random.random() < Config.contact_tracing_compliance * Config.app_installed_probability:
                             # set complying people to quarantine
-                            population[np.int32(person[0])][15] = 1
-                            population[np.int32(person[0])][5] = 0
-                            population[np.int32(person[0])][16] = frame
+                            if population[np.int32(person[0])][15] == 0:
+                                population[np.int32(person[0])][15] = 1
+                                population[np.int32(person[0])][5] = 0
+                                population[np.int32(person[0])][16] = frame
+                            else:
+                                pass
                         else:
                             pass
 
@@ -274,14 +282,16 @@ def recover_or_die(population, frame, Config):
             quarantine_duration = frame - people[16]
             if quarantine_duration >= Config.incubation_stage_duration:
                 if people[6] == 1:
-                    if np.random.random() >= (1 - Config.mortality_probability):
+                    people[15] = 0
+                    if np.random.random() < Config.mortality_probability:
                         people[6] = 2
                         people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
-                    else:
-                        pass
-                if people[6] == 0:
-                    people[6] = 2
+
+                if int(people[6]) in [0, 2, 4]:
+                    people[15] = 0
                     people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
+                if int(people[6]) == 3:
+                    people[15] = 0
 
     #find infected people
     infected_people = population[population[:,6] == 1]
