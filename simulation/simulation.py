@@ -244,7 +244,8 @@ class Simulation():
                                + str(self.pop_tracker.infectious[-1]) + ";"
                                + str(self.pop_tracker.recovered[-1]) + ";"
                                + str(len(self.population[self.population[:, 10] == 1])) + ";"
-                               + str(self.pop_tracker.fatalities[-1]) + "\n")
+                               + str(self.pop_tracker.fatalities[-1]) + "\n") + ";"\
+                   + str(self.pop_tracker.economy[-1])
         # change the log content
         # save popdata if required
         if self.Config.save_pop and (self.frame % self.Config.save_pop_freq) == 0:
