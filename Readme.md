@@ -41,7 +41,9 @@ Then it starts pulling a new message from the given SQS url to get simulation pa
 With further development from the previous simulation model, we add contact tracing mode by fine tuning some specific class. Details can be found in the [simulation](simulation) folder
 
 For `population.py`, we initiate the matrix with 17 columns. Specificly, we added 2 more column for the contact tracing app:
+
     * 15 : quarantined flag after receiving app alarm (contact tracing)
+    
     * 16 : quarantine since
 
 For `infection.py`, we regularly check the whole population for sick and healthy, which are location-based infection (i.e. check the individual physical indicator for infected probability, based on those who has been within the infection area of a confirmed case).
