@@ -79,7 +79,7 @@ class Configuration():
         self.infection_range=0.01 #range surrounding sick patient that infections can take place
         self.infection_chance=0.03   #chance that an infection spreads to nearby healthy people each tick
         self.fighting_duration=(200, 500) #how many ticks it may take to recover from the illness
-        self.mortality_probability=0.02 #global baseline chance of dying from the disease
+        self.mortality_probability=0.05 #global baseline chance of dying from the disease
 
         #healthcare variables
         self.healthcare_capacity = 300 #capacity of the healthcare system
@@ -90,7 +90,7 @@ class Configuration():
 
         #self isolation variables
         self.self_isolate_proportion = 0.6
-        self.isolation_bounds = [0.02, 0.02, 0.1, 0.98]
+        self.isolation_bounds = [0.02, 0.02, 0.09, 0.98]
         
         #lockdown variables
         self.lockdown_percentage = 0.1 
@@ -202,7 +202,7 @@ class Configuration():
         # self.contact_tracing_vector[np.random.uniform(size=(self.pop_size,)) >= (1-EFFICIENCY)] = 1
         self.isolation_bounds = isolation_bounds
         # set roaming bounds to outside isolated area
-        self.xbounds = [0.1, 1.1]
+        self.xbounds = [0.02, 0.98]
         self.ybounds = [0.02, 0.98]
 
 

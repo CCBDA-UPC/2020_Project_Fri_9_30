@@ -134,16 +134,18 @@ def infect(population, Config, frame, send_to_location=False,
                     if send_to_location | Config.contact_tracing:
                         # send to location if die roll is positive
                         if np.random.uniform() <= location_odds:
-                            population[np.int32(patient[0])], \
-                            destinations[np.int32(patient[0])] = go_to_location(population[np.int32(patient[0])],
-                                                                                destinations[
-                                                                                    np.int32(patient[0])],
-                                                                                location_bounds,
-                                                                                dest_no=location_no)
+                            if np.random.random() < Config.contact_tracing_compliance * Config.app_installed_probability:
+                                population[np.int32(patient[0])], \
+                                destinations[np.int32(patient[0])] = go_to_location(population[np.int32(patient[0])],
+                                                                                    destinations[
+                                                                                        np.int32(patient[0])],
+                                                                                    location_bounds,
+                                                                                    dest_no=location_no)
                             if population[np.int32(patient[0])][15] == 0:
-                                population[np.int32(patient[0])][15] = 1
-                                population[np.int32(patient[0])][5] = 0
-                                population[np.int32(patient[0])][16] = frame
+                                if np.random.random() < Config.contact_tracing_compliance * Config.app_installed_probability:
+                                    population[np.int32(patient[0])][15] = 1
+                                    population[np.int32(patient[0])][5] = 0
+                                    population[np.int32(patient[0])][16] = frame
                             else:
                                 pass
                 else:
@@ -189,6 +191,7 @@ def infect(population, Config, frame, send_to_location=False,
                                          infected_previous_step = infected_previous_step)
                 
                 if poplen > 0:
+                    # this person was exposed
                     if Config.contact_tracing:
                         # not all people will follow the App indication
                         if np.random.random() < Config.contact_tracing_compliance * Config.app_installed_probability:
@@ -211,11 +214,12 @@ def infect(population, Config, frame, send_to_location=False,
                             if send_to_location | Config.contact_tracing:
                                 #send to location and add to treatment if die roll is positive
                                 if np.random.uniform() < location_odds:
-                                    population[np.int32(person[0])],\
-                                    destinations[np.int32(person[0])] = go_to_location(population[np.int32(person[0])],
-                                                                                        destinations[np.int32(person[0])],
-                                                                                        location_bounds,
-                                                                                        dest_no=location_no)
+                                    if np.random.random() < Config.contact_tracing_compliance * Config.app_installed_probability:
+                                        population[np.int32(person[0])],\
+                                        destinations[np.int32(person[0])] = go_to_location(population[np.int32(person[0])],
+                                                                                            destinations[np.int32(person[0])],
+                                                                                            location_bounds,
+                                                                                            dest_no=location_no)
 
                         new_infections.append(np.int32(person[0]))
 
@@ -282,16 +286,16 @@ def recover_or_die(population, frame, Config):
             quarantine_duration = frame - people[16]
             if quarantine_duration >= Config.incubation_stage_duration:
                 if people[6] == 1:
-                    people[15] = 0
+                    population[np.int32(people[0])][15] = 0
                     if np.random.random() < Config.mortality_probability:
-                        people[6] = 2
-                        people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
+                        population[np.int32(people[0])][6] = 2
+                        population[np.int32(people[0])][5] = np.random.normal(loc=0.01, scale=0.01 / 3)
 
-                if int(people[6]) in [0, 2, 4]:
-                    people[15] = 0
-                    people[5] = np.random.normal(loc=0.01, scale=0.01 / 3)
-                if int(people[6]) == 3:
-                    people[15] = 0
+                if people[6] in [0, 2, 4]:
+                    population[np.int32(people[0])][15] = 0
+                    population[np.int32(people[0])][5] = np.random.normal(loc=0.01, scale=0.01 / 3)
+                if people[6] == 3:
+                    population[np.int32(people[0])][15] = 0
 
     #find infected people
     infected_people = population[population[:,6] == 1]
