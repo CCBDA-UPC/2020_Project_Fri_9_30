@@ -146,6 +146,12 @@ def infect(population, Config, frame, send_to_location=False,
                                     population[np.int32(patient[0])][15] = 1
                                     population[np.int32(patient[0])][5] = 0
                                     population[np.int32(patient[0])][16] = frame
+                                    population[np.int32(patient[0])], \
+                                    destinations[np.int32(patient[0])] = go_to_location(population[np.int32(patient[0])],
+                                                                                        destinations[
+                                                                                            np.int32(patient[0])],
+                                                                                        location_bounds,
+                                                                                        dest_no=location_no)
                             else:
                                 pass
                 else:
@@ -200,6 +206,11 @@ def infect(population, Config, frame, send_to_location=False,
                                 population[np.int32(person[0])][15] = 1
                                 population[np.int32(person[0])][5] = 0
                                 population[np.int32(person[0])][16] = frame
+                                population[np.int32(person[0])], \
+                                destinations[np.int32(person[0])] = go_to_location(population[np.int32(person[0])],
+                                                                                   destinations[np.int32(person[0])],
+                                                                                   location_bounds,
+                                                                                   dest_no=location_no)
                             else:
                                 pass
                         else:
