@@ -1,10 +1,12 @@
-## Q1. Install graphviz and pydot library not in google Colab by default. What syntax worked for each library? Try to install any other library. Give screenshots of the successful install and version in your response.
-```!pip install -q pydot``` are able to import both graphviz and pydot. 
+### Q1. Install graphviz and pydot library not in google Colab by default. What syntax worked for each library? Try to install any other library. Give screenshots of the successful install and version in your response.
+```!pip install -q pydot``` are able to import both graphviz and pydot and other library that we choose randomly. 
 <p align="center"><img src="./Images/Q1.png" width="70%" height="70%" alt="command"/></p>
 
-## Q2. Try the three methods for uploading data to Colab. Add screenshots to the response file.
+### Q2. Try the three methods for uploading data to Colab. Add screenshots to the response file.
 ##### From Local machine:
+It worked well.
 <p align="center"><img src="./Images/Q2-1.png" width="70%" height="70%" alt="local machine"/></p>
+
 ##### From Google drive:
 I encountered some errors as follows by following the tutorial.
 <p align="center"><img src="./Images/Q2-2(Problem).png" width="70%" height="70%" alt="google drive"/></p>
@@ -13,20 +15,21 @@ But it would work if I change to the following code. As In the mount can only ac
 <p align="center"><img src="./Images/Q2-2.png" width="70%" height="70%" alt="google drive"/></p>
 
 ##### From link to external source:
+It worked well.
 Here we create a public AWS S3 bucket, https://testtutorial2020.s3-eu-west-1.amazonaws.com/test1.csv
 <p align="center"><img src="./Images/Q2-3.png" width="70%" height="70%" alt="S3"/></p>
 
-## Q3: At this step, verify the dimensions of the train set, test set, and corresponding class labels by printing them. Take a screenshot of the result and add it in your response. How do the converted class labels of lists of binary variables make sense to you?
+### Q3: At this step, verify the dimensions of the train set, test set, and corresponding class labels by printing them. Take a screenshot of the result and add it in your response. How do the converted class labels of lists of binary variables make sense to you?
 
 <p align="center"><img src="./Images/Q3.png" width="70%" height="70%" alt="dimensions"/></p>
 
-## Q4: How much accuracy have you got? Is it satisfactory to you? If not, what could be done as a step to improve the accuracy?
+### Q4: How much accuracy have you got? Is it satisfactory to you? If not, what could be done as a step to improve the accuracy?
 
 <p align="center"><img src="./Images/Q4.png" width="70%" height="70%" alt="accuracy"/></p>
 
 I think the accuracy is pretty high. 
 
-## Q5: Add a screenshot of the TensorBoard dashboard showing your training profiles.
+### Q5: Add a screenshot of the TensorBoard dashboard showing your training profiles.
 
 <p align="center"><img src="./Images/Q5.png" width="70%" height="70%" alt="dashboard"/></p>
 
